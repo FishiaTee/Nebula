@@ -1,15 +1,13 @@
 package emu.nebula.server.routes;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import org.reflections.Reflections;
 
 import emu.nebula.Nebula;
 import emu.nebula.game.GameContext;
-import emu.nebula.net.NetHandler;
-import emu.nebula.net.NetMsgIdUtils;
-import emu.nebula.net.GameSession;
-import emu.nebula.net.HandlerId;
+import emu.nebula.net.*;
 import emu.nebula.util.AeadHelper;
 import emu.nebula.util.Utils;
 import io.javalin.http.Context;
@@ -26,6 +24,7 @@ public class AgentZoneHandler implements Handler {
     public AgentZoneHandler() {
         this.handlers = new Int2ObjectOpenHashMap<>();
         this.registerHandlers();
+        this.registerDummyHandlers();
     }
     
     protected GameContext getGameContext() {
@@ -207,6 +206,57 @@ public class AgentZoneHandler implements Handler {
         
         // Log registration
         Nebula.getLogger().info("Registered " + handlers.size() + " handlers");
+    }
+    
+    private void registerDummyHandlers() {
+        int count = 0;
+        Field[] fields = NetMsgId.class.getFields();
+
+        for (Field f : fields) {
+            if (!f.getType().equals(int.class)) {
+                continue;
+            }
+            
+            try {
+                // Get name + msgId
+                String name = f.getName();
+                int msgId = f.getInt(null);
+                
+                // Skip if we already have an handler
+                if (this.getHandlers().containsKey(msgId)) {
+                    continue;
+                }
+                
+                if (name.endsWith("_req")) {
+                    // Find failed rsp msg id
+                    Field failedAckField = NetMsgId.class.getField(name.substring(0, name.length() - 3) + "failed_ack");
+                    if (failedAckField == null) {
+                        continue;
+                    }
+                    
+                    int failedAckId = failedAckField.getInt(null);
+                    
+                    // Create dummy handler
+                    var handler = new NetHandler() {
+                        @Override
+                        public byte[] handle(GameSession session, byte[] message) throws Exception {
+                            return this.encodeMsg(failedAckId);
+                        }
+                    };
+                    
+                    // Add
+                    this.handlers.put(msgId, handler);
+                    
+                    // Increment count
+                    count++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        // Log registration
+        Nebula.getLogger().info("Registered " + count + " dummy handlers");
     }
 }
 
