@@ -16,13 +16,11 @@ public class HandlerActivityDetailReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         var rsp = ActivityResp.newInstance();
         
-        /*
         var activity = ActivityMsg.newInstance()
                 .setId(700101)
                 .setTrial(ActivityTrial.newInstance());
         
         rsp.addList(activity);
-        */
         
         return this.encodeMsg(NetMsgId.activity_detail_succeed_ack, rsp);
     }

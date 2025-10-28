@@ -24,6 +24,7 @@ import emu.nebula.proto.Public.NewbieInfo;
 import emu.nebula.proto.Public.QuestType;
 import emu.nebula.proto.Public.Story;
 import emu.nebula.proto.Public.WorldClass;
+import emu.nebula.proto.Public.Title;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -41,6 +42,7 @@ public class Player implements GameDatabaseObject {
     
     // Details
     private String name;
+    private String signature;
     private boolean gender;
     private int headIcon;
     private int skinId;
@@ -52,6 +54,7 @@ public class Player implements GameDatabaseObject {
     private int energy;
    
     private IntSet boards;
+    private IntSet headIcons;
     private IntSet titles;
     
     private long createTime;
@@ -86,6 +89,7 @@ public class Player implements GameDatabaseObject {
         // Set basic info
         this.accountUid = account.getUid();
         this.name = name;
+        this.signature = "";
         this.gender = gender;
         this.headIcon = 101;
         this.skinId = 10301;
@@ -93,6 +97,7 @@ public class Player implements GameDatabaseObject {
         this.titleSuffix = 2;
         this.level = 1;
         this.boards = new IntOpenHashSet();
+        this.headIcons = new IntOpenHashSet();
         this.titles = new IntOpenHashSet();
         this.createTime = Nebula.getCurrentTime();
         
@@ -172,6 +177,48 @@ public class Player implements GameDatabaseObject {
         
         // Update in database
         Nebula.getGameDatabase().update(this, this.getUid(), "gender", this.getGender());
+    }
+
+    public boolean editTitle(int prefix, int suffix) {
+        // Check to make sure we own these titles
+        if (!getTitles().contains(prefix) || !getTitles().contains(suffix)) {
+            return false;
+        }
+        
+        // Skip if we are not changing titles
+        if (this.titlePrefix == prefix && this.titleSuffix == suffix) {
+            return true;
+        }
+        
+        // Set
+        this.titlePrefix = prefix;
+        this.titleSuffix = suffix;
+        
+        // Update in database
+        Nebula.getGameDatabase().update(this, this.getUid(), "titlePrefix", this.getTitlePrefix(), "titleSuffix", this.getTitleSuffix());
+        
+        return true;
+    }
+    
+    public boolean editSignature(String signature) {
+        // Sanity check
+        if (signature == null) {
+            return false;
+        }
+        
+        // Limit signature to 30 max chars
+        if (signature.length() > 30) {
+            signature = signature.substring(0, 29);
+        }
+        
+        // Set signature
+        this.signature = signature;
+        
+        // Update in database
+        Nebula.getGameDatabase().update(this, this.getUid(), "signature", this.getSignature());
+        
+        // Success
+        return true;
     }
     
     public void setNewbieInfo(int groupId, int stepId) {
@@ -276,6 +323,7 @@ public class Player implements GameDatabaseObject {
         
         var acc = proto.getMutableAcc()
             .setNickName(this.getName())
+            .setSignature(this.getSignature())
             .setGender(this.getGender())
             .setId(this.getUid())
             .setHeadIcon(this.getHeadIcon())
@@ -357,9 +405,21 @@ public class Player implements GameDatabaseObject {
             
             story.addStories(storyProto);
         }
+        
+        // Add titles
+        for (int titleId : this.getTitles()) {
+            var titleProto = Title.newInstance()
+                    .setTitleId(titleId);
+            
+            proto.addTitles(titleProto);
+        }
+        
+        // Add board ids
+        for (int boardId : this.getBoards()) {
+            proto.addBoard(boardId);
+        }
 
-        //
-        proto.addBoard(410301);
+        // Server timestamp
         proto.setServerTs(Nebula.getCurrentTime());
         
         // Extra
