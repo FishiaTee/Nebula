@@ -134,8 +134,6 @@ public class CharacterStorage extends PlayerManager {
             this.characters.put(character.getCharId(), character);
         });
         
-        
-        
         db.getObjects(GameDisc.class, "playerUid", getPlayerUid()).forEach(disc -> {
             // Get data
             var data = GameData.getDiscDataTable().get(disc.getDiscId());

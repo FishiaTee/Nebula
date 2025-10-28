@@ -44,6 +44,30 @@ public class Formation {
         return this.discIds[i];
     }
     
+    public int getCharCount() {
+        int count = 0;
+        
+        for (int id : this.getCharIds()) {
+            if (id > 0) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+
+    public int getDiscCount() {
+        int count = 0;
+        
+        for (int id : this.getDiscIds()) {
+            if (id > 0) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+    
     // Proto
     
     public FormationInfo toProto() {
