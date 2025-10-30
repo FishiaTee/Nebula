@@ -13,13 +13,14 @@ import emu.nebula.Nebula;
 import emu.nebula.database.GameDatabaseObject;
 import emu.nebula.game.player.Player;
 import emu.nebula.game.player.PlayerChangeInfo;
+import emu.nebula.game.player.PlayerManager;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
 
 @Getter
 @Entity(value = "mailbox", useDiscriminator = false)
-public class Mailbox implements GameDatabaseObject, Iterable<GameMail> {
+public class Mailbox extends PlayerManager implements GameDatabaseObject, Iterable<GameMail> {
     @Id
     private int uid;
     private int lastMailId;
@@ -32,8 +33,11 @@ public class Mailbox implements GameDatabaseObject, Iterable<GameMail> {
     }
     
     public Mailbox(Player player) {
+        super(player);
+        
         this.uid = player.getUid();
         this.list = new ArrayList<>();
+        
         this.save();
     }
     

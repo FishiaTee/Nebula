@@ -303,6 +303,22 @@ public class Player implements GameDatabaseObject {
     
     // Login
     
+    private <T extends PlayerManager> T loadManagerFromDatabase(Class<T> cls) {
+        var manager = Nebula.getGameDatabase().getObjectByField(cls, "_id", this.getUid());
+        
+        if (manager != null) {
+            manager.setPlayer(this);
+        } else {
+            try {
+                manager = cls.getDeclaredConstructor(Player.class).newInstance(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return manager;
+    }
+    
     public void onLoad() {
         // Debug 
         this.energy = 240;
@@ -312,38 +328,11 @@ public class Player implements GameDatabaseObject {
         this.getInventory().loadFromDatabase();
         
         // Load referenced classes
-        this.formations = Nebula.getGameDatabase().getObjectByField(FormationManager.class, "_id", this.getUid());
-        if (this.formations == null) {
-            this.formations = new FormationManager(this);
-        } else {
-            this.formations.setPlayer(this);
-        }
-        
-        this.mailbox = Nebula.getGameDatabase().getObjectByField(Mailbox.class, "_id", this.getUid());
-        if (this.mailbox == null) {
-            this.mailbox = new Mailbox(this);
-        }
-        
-        this.starTowerManager = Nebula.getGameDatabase().getObjectByField(StarTowerManager.class, "_id", this.getUid());
-        if (this.starTowerManager == null) {
-            this.starTowerManager = new StarTowerManager(this);
-        } else {
-            this.starTowerManager.setPlayer(this);
-        }
-
-        this.instanceManager = Nebula.getGameDatabase().getObjectByField(InstanceManager.class, "_id", this.getUid());
-        if (this.instanceManager == null) {
-            this.instanceManager = new InstanceManager(this);
-        } else {
-            this.instanceManager.setPlayer(this);
-        }
-        
-        this.storyManager = Nebula.getGameDatabase().getObjectByField(StoryManager.class, "_id", this.getUid());
-        if (this.storyManager == null) {
-            this.storyManager = new StoryManager(this);
-        } else {
-            this.storyManager.setPlayer(this);
-        }
+        this.formations = this.loadManagerFromDatabase(FormationManager.class);
+        this.mailbox = this.loadManagerFromDatabase(Mailbox.class);
+        this.starTowerManager = this.loadManagerFromDatabase(StarTowerManager.class);
+        this.instanceManager = this.loadManagerFromDatabase(InstanceManager.class);
+        this.storyManager = this.loadManagerFromDatabase(StoryManager.class);
     }
     
     // Proto
