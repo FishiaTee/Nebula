@@ -20,7 +20,7 @@ public class HandlerMailPinReq extends NetHandler {
         
         // Sanity check
         if (mail == null) {
-            return this.encodeMsg(NetMsgId.mail_pin_failed_ack);
+            return session.encodeMsg(NetMsgId.mail_pin_failed_ack);
         }
         
         // Build response
@@ -29,7 +29,7 @@ public class HandlerMailPinReq extends NetHandler {
                 .setFlag(mail.getFlag())
                 .setPin(mail.isPin());
         
-        return this.encodeMsg(NetMsgId.mail_pin_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.mail_pin_succeed_ack, rsp);
     }
 
 }

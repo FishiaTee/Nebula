@@ -21,7 +21,7 @@ public class HandlerStarTowerBuildBriefListGetReq extends NetHandler {
         }
         
         // Finish
-        return this.encodeMsg(NetMsgId.star_tower_build_brief_list_get_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_build_brief_list_get_succeed_ack, rsp);
     }
 
 }

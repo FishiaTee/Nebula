@@ -26,7 +26,7 @@ public class HandlerMailRemoveReq extends NetHandler {
             rsp.addIds(id);
         }
         
-        return this.encodeMsg(NetMsgId.mail_remove_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.mail_remove_succeed_ack, rsp);
     }
 
 }

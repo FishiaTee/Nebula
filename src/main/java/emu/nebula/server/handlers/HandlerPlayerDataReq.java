@@ -16,11 +16,11 @@ public class HandlerPlayerDataReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         // Check if player has been created yet
         if (session.getPlayer() == null) {
-            return this.encodeMsg(NetMsgId.player_new_notify);
+            return session.encodeMsg(NetMsgId.player_new_notify);
         }
         
         // Encode player data
-        return this.encodeMsg(NetMsgId.player_data_succeed_ack, session.getPlayer().toProto());
+        return session.encodeMsg(NetMsgId.player_data_succeed_ack, session.getPlayer().toProto());
     }
 
 }

@@ -16,7 +16,8 @@ public class HandlerPlayerTitleEditReq extends NetHandler {
         
         boolean success = session.getPlayer().editTitle(req.getTitlePrefix(), req.getTitleSuffix());
         
-        return this.encodeMsg(success ? NetMsgId.player_title_edit_succeed_ack : NetMsgId.player_title_edit_failed_ack);
+        // Send response
+        return session.encodeMsg(success ? NetMsgId.player_title_edit_succeed_ack : NetMsgId.player_title_edit_failed_ack);
     }
 
 }

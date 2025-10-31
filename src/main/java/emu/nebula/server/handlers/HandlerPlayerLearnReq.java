@@ -16,7 +16,7 @@ public class HandlerPlayerLearnReq extends NetHandler {
         // TODO set newbie info
         session.getPlayer().setNewbieInfo(req.getGroupId(), req.getStepId());
         
-        return this.encodeMsg(NetMsgId.player_learn_succeed_ack);
+        return session.encodeMsg(NetMsgId.player_learn_succeed_ack);
     }
 
 }

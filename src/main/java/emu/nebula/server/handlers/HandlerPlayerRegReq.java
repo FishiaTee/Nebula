@@ -22,18 +22,18 @@ public class HandlerPlayerRegReq extends NetHandler {
         
         // Sanity
         if (req.getNickname() == null || req.getNickname().isEmpty()) {
-            return this.encodeMsg(NetMsgId.player_reg_failed_ack);
+            return session.encodeMsg(NetMsgId.player_reg_failed_ack);
         }
         
         // Create player
         Player player = Nebula.getGameContext().getPlayerModule().createPlayer(session, req.getNickname(), req.getGender());
         
         if (player == null) {
-            return this.encodeMsg(NetMsgId.player_reg_failed_ack);
+            return session.encodeMsg(NetMsgId.player_reg_failed_ack);
         }
         
         // Encode player data
-        return this.encodeMsg(NetMsgId.player_data_succeed_ack, session.getPlayer().toProto());
+        return session.encodeMsg(NetMsgId.player_data_succeed_ack, session.getPlayer().toProto());
     }
 
 }

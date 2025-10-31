@@ -13,7 +13,7 @@ public class HandlerAchievementInfoReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         var rsp = Achievements.newInstance();
         
-        return this.encodeMsg(NetMsgId.achievement_info_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.achievement_info_succeed_ack, rsp);
     }
 
 }

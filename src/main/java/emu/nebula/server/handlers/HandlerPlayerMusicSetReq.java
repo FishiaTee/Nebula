@@ -10,7 +10,7 @@ public class HandlerPlayerMusicSetReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.player_music_set_failed_ack);
+        return session.encodeMsg(NetMsgId.player_music_set_failed_ack);
     }
 
 }

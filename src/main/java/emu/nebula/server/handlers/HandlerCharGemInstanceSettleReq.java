@@ -20,7 +20,7 @@ public class HandlerCharGemInstanceSettleReq extends NetHandler {
         // Get boss level data
         var data = GameData.getCharGemInstanceDataTable().get(player.getInstanceManager().getCurInstanceId());
         if (data == null || !data.hasEnergy(player)) {
-            return this.encodeMsg(NetMsgId.char_gem_instance_settle_failed_ack);
+            return session.encodeMsg(NetMsgId.char_gem_instance_settle_failed_ack);
         }
         
         // Parse request
@@ -52,7 +52,7 @@ public class HandlerCharGemInstanceSettleReq extends NetHandler {
         }
         
         // Send response
-        return this.encodeMsg(NetMsgId.char_gem_instance_settle_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.char_gem_instance_settle_succeed_ack, rsp);
     }
 
 }

@@ -11,20 +11,20 @@ public class HandlerStarTowerGiveUpReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        var instance = session.getPlayer().getStarTowerManager().giveUp();
+        var game = session.getPlayer().getStarTowerManager().giveUp();
         
-        if (instance == null) {
-            return this.encodeMsg(NetMsgId.star_tower_give_up_failed_ack);
+        if (game == null) {
+            return session.encodeMsg(NetMsgId.star_tower_give_up_failed_ack);
         }
         
         // Build response
         var rsp = StarTowerGiveUpResp.newInstance()
-                .setFloor(instance.getFloor());
+                .setFloor(game.getFloor());
         
         rsp.getMutableChange();
-        rsp.setBuild(instance.getBuild().toProto());
+        rsp.setBuild(game.getBuild().toProto());
         
-        return this.encodeMsg(NetMsgId.star_tower_give_up_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_give_up_succeed_ack, rsp);
     }
 
 }

@@ -35,7 +35,7 @@ public class HandlerGachaNewbieSpinReq extends NetHandler {
             rsp.addCards(id);
         }
         
-        return this.encodeMsg(NetMsgId.gacha_newbie_spin_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.gacha_newbie_spin_succeed_ack, rsp);
     }
 
 }

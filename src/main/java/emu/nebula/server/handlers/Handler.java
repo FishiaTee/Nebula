@@ -11,7 +11,7 @@ public class Handler extends NetHandler {
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         // Template
-        return null;
+        return session.encodeMsg(NetMsgId.none);
     }
 
 }

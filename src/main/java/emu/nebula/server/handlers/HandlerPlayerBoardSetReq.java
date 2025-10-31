@@ -17,7 +17,7 @@ public class HandlerPlayerBoardSetReq extends NetHandler {
         // Set board
         boolean success = session.getPlayer().setBoard(req.getIds());
         
-        return this.encodeMsg(success ? NetMsgId.player_board_set_succeed_ack : NetMsgId.player_board_set_failed_ack);
+        return session.encodeMsg(success ? NetMsgId.player_board_set_succeed_ack : NetMsgId.player_board_set_failed_ack);
     }
 
 }

@@ -18,13 +18,13 @@ public class HandlerStarTowerBuildLockUnlockReq extends NetHandler {
         var build = session.getPlayer().getStarTowerManager().getBuildById(req.getBuildId());
         
         if (build == null) {
-            return this.encodeMsg(NetMsgId.star_tower_build_lock_unlock_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_build_lock_unlock_failed_ack);
         }
         
         build.setLock(req.getLock());
         
         // Encode packet
-        return this.encodeMsg(NetMsgId.star_tower_build_lock_unlock_succeed_ack);
+        return session.encodeMsg(NetMsgId.star_tower_build_lock_unlock_succeed_ack);
     }
 
 }

@@ -17,10 +17,10 @@ public class HandlerMailReadReq extends NetHandler {
         boolean result = session.getPlayer().getMailbox().readMail(req.getId(), req.getFlag());
         
         if (!result) {
-            return this.encodeMsg(NetMsgId.mail_read_failed_ack);
+            return session.encodeMsg(NetMsgId.mail_read_failed_ack);
         }
         
-        return this.encodeMsg(NetMsgId.mail_read_succeed_ack, UI32.newInstance().setValue(req.getId()));
+        return session.encodeMsg(NetMsgId.mail_read_succeed_ack, UI32.newInstance().setValue(req.getId()));
     }
 
 }

@@ -25,7 +25,7 @@ public class HandlerIkeReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         // Make sure we dont already have a session
         if (session != null) {
-            return this.encodeMsg(NetMsgId.ike_failed_ack);
+            return session.encodeMsg(NetMsgId.ike_failed_ack);
         }
         
         // Parse
@@ -55,7 +55,7 @@ public class HandlerIkeReq extends NetHandler {
         */
         
         // Encode and send to client
-        return this.encodeMsg(NetMsgId.ike_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.ike_succeed_ack, rsp);
     }
 
 }

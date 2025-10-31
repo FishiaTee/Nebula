@@ -12,7 +12,7 @@ public class HandlerPlayerGenderEditReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         session.getPlayer().editGender();
         
-        return this.encodeMsg(NetMsgId.player_gender_edit_succeed_ack);
+        return session.encodeMsg(NetMsgId.player_gender_edit_succeed_ack);
     }
 
 }

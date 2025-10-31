@@ -242,7 +242,7 @@ public class AgentZoneHandler implements Handler {
                     var handler = new NetHandler() {
                         @Override
                         public byte[] handle(GameSession session, byte[] message) throws Exception {
-                            return this.encodeMsg(failedAckId);
+                            return PacketHelper.encodeMsg(failedAckId);
                         }
                     };
                     

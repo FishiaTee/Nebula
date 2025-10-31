@@ -13,7 +13,7 @@ public class HandlerGachaNewbieInfoReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         var rsp = GachaInformationResp.newInstance();
         
-        return this.encodeMsg(NetMsgId.gacha_newbie_info_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.gacha_newbie_info_succeed_ack, rsp);
     }
 
 }

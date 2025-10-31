@@ -19,14 +19,14 @@ public class HandlerDiscPromoteReq extends NetHandler {
         var disc = session.getPlayer().getCharacters().getDiscById(req.getId());
         
         if (disc == null) {
-            return this.encodeMsg(NetMsgId.disc_promote_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_promote_failed_ack);
         }
         
         // Advance character
         var change = disc.promote();
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.disc_promote_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_promote_failed_ack);
         }
         
         // Build request
@@ -34,7 +34,7 @@ public class HandlerDiscPromoteReq extends NetHandler {
                 .setPhase(disc.getPhase())
                 .setChange(change.toProto());
         
-        return this.encodeMsg(NetMsgId.disc_promote_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.disc_promote_succeed_ack, rsp);
     }
 
 }

@@ -20,7 +20,7 @@ public class HandlerSkillInstanceSettleReq extends NetHandler {
         // Get boss level data
         var data = GameData.getSkillInstanceDataTable().get(player.getInstanceManager().getCurInstanceId());
         if (data == null || !data.hasEnergy(player)) {
-            return this.encodeMsg(NetMsgId.skill_instance_settle_failed_ack);
+            return session.encodeMsg(NetMsgId.skill_instance_settle_failed_ack);
         }
         
         // Parse request
@@ -52,7 +52,7 @@ public class HandlerSkillInstanceSettleReq extends NetHandler {
         }
         
         // Send response
-        return this.encodeMsg(NetMsgId.skill_instance_settle_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.skill_instance_settle_succeed_ack, rsp);
     }
 
 }

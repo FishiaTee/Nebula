@@ -17,17 +17,17 @@ public class HandlerCharAdvanceReq extends NetHandler {
         var character = session.getPlayer().getCharacters().getCharacterById(req.getValue());
         
         if (character == null) {
-            return this.encodeMsg(NetMsgId.char_advance_failed_ack);
+            return session.encodeMsg(NetMsgId.char_advance_failed_ack);
         }
         
         // Advance character
         var change = character.advance();
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.char_advance_failed_ack);
+            return session.encodeMsg(NetMsgId.char_advance_failed_ack);
         }
         
-        return this.encodeMsg(NetMsgId.char_advance_succeed_ack, change.toProto());
+        return session.encodeMsg(NetMsgId.char_advance_succeed_ack, change.toProto());
     }
 
 }

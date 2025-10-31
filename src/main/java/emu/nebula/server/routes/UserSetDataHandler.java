@@ -42,7 +42,6 @@ public class UserSetDataHandler extends UserLoginHandler {
         ctx.result("{\"Code\":200,\"Data\":{},\"Msg\":\"OK\"}");
     }
     
-    @SuppressWarnings("unused")
     private static class UserSetDataReqJson {
         public String Key;
         public String Value;

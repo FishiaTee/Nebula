@@ -10,7 +10,7 @@ public class HandlerDiscReadRewardReceiveReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.disc_read_reward_receive_failed_ack);
+        return session.encodeMsg(NetMsgId.disc_read_reward_receive_failed_ack);
     }
 
 }

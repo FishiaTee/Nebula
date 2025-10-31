@@ -20,14 +20,14 @@ public class HandlerStarTowerBuildDetailGetReq extends NetHandler {
         var build = session.getPlayer().getStarTowerManager().getBuilds().get(buildId);
         
         if (build == null) {
-            return this.encodeMsg(NetMsgId.star_tower_build_detail_get_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_build_detail_get_failed_ack);
         }
         
         // Build response
         var rsp = StarTowerBuildDetailGetResp.newInstance()
                 .setDetail(build.toDetailProto());
         
-        return this.encodeMsg(NetMsgId.star_tower_build_detail_get_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_build_detail_get_succeed_ack, rsp);
     }
 
 }

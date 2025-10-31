@@ -10,7 +10,7 @@ public class HandlerClientEventReportReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.client_event_report_succeed_ack);
+        return session.encodeMsg(NetMsgId.client_event_report_succeed_ack);
     }
 
 }

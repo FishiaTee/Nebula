@@ -34,7 +34,7 @@ public class HandlerMallShopListReq extends NetHandler {
             rsp.addList(info);
         }
         
-        return this.encodeMsg(NetMsgId.mall_shop_list_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.mall_shop_list_succeed_ack, rsp);
     }
 
 }

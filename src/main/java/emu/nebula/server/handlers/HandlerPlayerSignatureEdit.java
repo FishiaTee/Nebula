@@ -16,7 +16,8 @@ public class HandlerPlayerSignatureEdit extends NetHandler {
         
         session.getPlayer().editSignature(req.getSignature());
         
-        return this.encodeMsg(NetMsgId.player_signature_edit_succeed_ack);
+        // Send response
+        return session.encodeMsg(NetMsgId.player_signature_edit_succeed_ack);
     }
 
 }

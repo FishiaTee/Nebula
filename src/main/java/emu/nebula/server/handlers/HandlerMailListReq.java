@@ -18,7 +18,7 @@ public class HandlerMailListReq extends NetHandler {
             rsp.addList(mail.toProto());
         }
         
-        return this.encodeMsg(NetMsgId.mail_list_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.mail_list_succeed_ack, rsp);
     }
 
 }

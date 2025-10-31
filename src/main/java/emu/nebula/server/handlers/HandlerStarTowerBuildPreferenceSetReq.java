@@ -37,7 +37,7 @@ public class HandlerStarTowerBuildPreferenceSetReq extends NetHandler {
         }
         
         // Encode packet
-        return this.encodeMsg(NetMsgId.star_tower_build_preference_set_succeed_ack);
+        return session.encodeMsg(NetMsgId.star_tower_build_preference_set_succeed_ack);
     }
 
 }

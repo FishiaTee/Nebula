@@ -14,6 +14,8 @@ import emu.nebula.game.player.Player;
 import emu.nebula.util.AeadHelper;
 import emu.nebula.util.Utils;
 import lombok.Getter;
+import lombok.SneakyThrows;
+import us.hebi.quickbuf.ProtoMessage;
 import us.hebi.quickbuf.RepeatedByte;
 
 @Getter
@@ -63,6 +65,8 @@ public class GameSession {
     public boolean hasPlayer() {
         return this.player != null;
     }
+    
+    // Encryption
 
     public void setClientKey(RepeatedByte key) {
         this.clientPublicKey = key.toArray();
@@ -94,6 +98,8 @@ public class GameSession {
         
         return this.token;
     }
+    
+    // Login
     
     public boolean login(String loginToken) {
         // Sanity check
@@ -127,5 +133,20 @@ public class GameSession {
     
     public void updateLastActiveTime() {
         this.lastActiveTime = System.currentTimeMillis();
+    }
+    
+    // Packet encoding helper functions
+    
+    public byte[] encodeMsg(int msgId, byte[] packet) {
+        return PacketHelper.encodeMsg(msgId, packet);
+    }
+
+    @SneakyThrows
+    public byte[] encodeMsg(int msgId, ProtoMessage<?> proto) {
+        return PacketHelper.encodeMsg(msgId, proto);
+    }
+    
+    public byte[] encodeMsg(int msgId) {
+        return PacketHelper.encodeMsg(msgId);
     }
 }

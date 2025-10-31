@@ -10,7 +10,7 @@ public class HandlerBattlePassInfoReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.battle_pass_info_failed_ack);
+        return session.encodeMsg(NetMsgId.battle_pass_info_failed_ack);
     }
 
 }

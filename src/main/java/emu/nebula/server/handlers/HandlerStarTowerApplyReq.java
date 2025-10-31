@@ -19,7 +19,7 @@ public class HandlerStarTowerApplyReq extends NetHandler {
         var instance = session.getPlayer().getStarTowerManager().apply(req);
         
         if (instance == null) {
-            return this.encodeMsg(NetMsgId.star_tower_apply_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_apply_failed_ack);
         }
         
         // Create response
@@ -29,7 +29,7 @@ public class HandlerStarTowerApplyReq extends NetHandler {
         
         rsp.getMutableChange();
         
-        return this.encodeMsg(NetMsgId.star_tower_apply_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_apply_succeed_ack, rsp);
     }
 
 }

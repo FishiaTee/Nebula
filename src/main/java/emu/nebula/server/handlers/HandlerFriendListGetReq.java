@@ -13,7 +13,7 @@ public class HandlerFriendListGetReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         var rsp = FriendListGetResp.newInstance();
         
-        return this.encodeMsg(NetMsgId.friend_list_get_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.friend_list_get_succeed_ack, rsp);
     }
 
 }

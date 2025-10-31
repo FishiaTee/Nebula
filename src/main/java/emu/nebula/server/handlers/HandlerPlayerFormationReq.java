@@ -15,7 +15,7 @@ public class HandlerPlayerFormationReq extends NetHandler {
         
         boolean success = session.getPlayer().getFormations().updateFormation(req.getFormation());
         
-        return this.encodeMsg(success ? NetMsgId.player_formation_succeed_ack : NetMsgId.player_formation_failed_ack);
+        return session.encodeMsg(success ? NetMsgId.player_formation_succeed_ack : NetMsgId.player_formation_failed_ack);
     }
 
 }

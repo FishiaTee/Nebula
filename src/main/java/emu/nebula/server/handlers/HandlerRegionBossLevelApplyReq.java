@@ -17,14 +17,14 @@ public class HandlerRegionBossLevelApplyReq extends NetHandler {
         
         var data = GameData.getRegionBossLevelDataTable().get(req.getId());
         if (data == null || !data.hasEnergy(session.getPlayer())) {
-            return this.encodeMsg(NetMsgId.region_boss_level_apply_failed_ack);
+            return session.encodeMsg(NetMsgId.region_boss_level_apply_failed_ack);
         }
         
         // Set player instance id
         session.getPlayer().getInstanceManager().setCurInstanceId(req.getId());
         
         // Send response
-        return this.encodeMsg(NetMsgId.region_boss_level_apply_succeed_ack);
+        return session.encodeMsg(NetMsgId.region_boss_level_apply_succeed_ack);
     }
 
 }

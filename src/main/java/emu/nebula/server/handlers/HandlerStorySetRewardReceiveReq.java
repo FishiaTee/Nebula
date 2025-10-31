@@ -18,7 +18,7 @@ public class HandlerStorySetRewardReceiveReq extends NetHandler {
         var changes = session.getPlayer().getStoryManager().settleSet(req.getChapterId(), req.getSectionId());
         
         // Finish
-        return this.encodeMsg(NetMsgId.story_set_reward_receive_succeed_ack, changes.toProto());
+        return session.encodeMsg(NetMsgId.story_set_reward_receive_succeed_ack, changes.toProto());
     }
 
 }

@@ -25,8 +25,8 @@ public class HandlerStorySettleReq extends NetHandler {
         // Settle
         var changes = session.getPlayer().getStoryManager().settle(list);
         
-        // Finish
-        return this.encodeMsg(NetMsgId.story_settle_succeed_ack, changes.toProto());
+        // Send response
+        return session.encodeMsg(NetMsgId.story_settle_succeed_ack, changes.toProto());
     }
 
 }

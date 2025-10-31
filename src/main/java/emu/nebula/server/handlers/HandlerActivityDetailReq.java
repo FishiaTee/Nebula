@@ -21,7 +21,7 @@ public class HandlerActivityDetailReq extends NetHandler {
         
         rsp.addList(activity);
         
-        return this.encodeMsg(NetMsgId.activity_detail_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.activity_detail_succeed_ack, rsp);
     }
 
 }

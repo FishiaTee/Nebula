@@ -15,7 +15,7 @@ public class HandlerStarTowerInteractReq extends NetHandler {
         var game = session.getPlayer().getStarTowerManager().getGame();
         
         if (game == null) {
-            return this.encodeMsg(NetMsgId.star_tower_interact_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_interact_failed_ack);
         }
         
         // Parse request
@@ -24,8 +24,8 @@ public class HandlerStarTowerInteractReq extends NetHandler {
         // Handle interaction
         var rsp = game.handleInteract(req);
         
-        // Template
-        return this.encodeMsg(NetMsgId.star_tower_interact_succeed_ack, rsp);
+        // Send response
+        return session.encodeMsg(NetMsgId.star_tower_interact_succeed_ack, rsp);
     }
 
 }

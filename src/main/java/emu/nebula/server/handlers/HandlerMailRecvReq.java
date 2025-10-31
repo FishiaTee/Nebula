@@ -30,7 +30,7 @@ public class HandlerMailRecvReq extends NetHandler {
             recvList.forEach(rsp::addIds);
         }
         
-        return this.encodeMsg(NetMsgId.mail_recv_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.mail_recv_succeed_ack, rsp);
     }
 
 }

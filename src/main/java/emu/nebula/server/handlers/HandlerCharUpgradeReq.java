@@ -20,7 +20,7 @@ public class HandlerCharUpgradeReq extends NetHandler {
         var character = session.getPlayer().getCharacters().getCharacterById(req.getCharId());
         
         if (character == null) {
-            return this.encodeMsg(NetMsgId.char_upgrade_failed_ack);
+            return session.encodeMsg(NetMsgId.char_upgrade_failed_ack);
         }
         
         // Upgrade character
@@ -28,7 +28,7 @@ public class HandlerCharUpgradeReq extends NetHandler {
         var change = character.upgrade(params);
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.char_upgrade_failed_ack);
+            return session.encodeMsg(NetMsgId.char_upgrade_failed_ack);
         }
         
         // Create response
@@ -37,7 +37,7 @@ public class HandlerCharUpgradeReq extends NetHandler {
                 .setLevel(character.getLevel())
                 .setExp(character.getExp());
         
-        return this.encodeMsg(NetMsgId.char_upgrade_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.char_upgrade_succeed_ack, rsp);
     }
 
 }

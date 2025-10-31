@@ -19,14 +19,14 @@ public class HandlerDiscLimitBreakReq extends NetHandler {
         var disc = session.getPlayer().getCharacters().getDiscById(req.getId());
         
         if (disc == null) {
-            return this.encodeMsg(NetMsgId.disc_limit_break_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_limit_break_failed_ack);
         }
         
         // Limit break
         var change = disc.limitBreak(req.getQty());
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.disc_limit_break_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_limit_break_failed_ack);
         }
         
         // Create response
@@ -34,7 +34,7 @@ public class HandlerDiscLimitBreakReq extends NetHandler {
                 .setStar(disc.getStar())
                 .setChange(null);
         
-        return this.encodeMsg(NetMsgId.disc_limit_break_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.disc_limit_break_succeed_ack, rsp);
     }
 
 }

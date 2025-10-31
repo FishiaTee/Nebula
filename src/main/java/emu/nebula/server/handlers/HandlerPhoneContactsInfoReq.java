@@ -10,7 +10,7 @@ public class HandlerPhoneContactsInfoReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.phone_contacts_info_succeed_ack);
+        return session.encodeMsg(NetMsgId.phone_contacts_info_succeed_ack);
     }
 
 }

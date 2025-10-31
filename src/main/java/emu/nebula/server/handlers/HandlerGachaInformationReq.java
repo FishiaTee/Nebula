@@ -15,7 +15,7 @@ public class HandlerGachaInformationReq extends NetHandler {
         
         // TODO
         
-        return this.encodeMsg(NetMsgId.gacha_information_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.gacha_information_succeed_ack, rsp);
     }
 
 }

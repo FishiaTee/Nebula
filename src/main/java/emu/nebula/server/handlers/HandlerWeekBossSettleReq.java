@@ -20,7 +20,7 @@ public class HandlerWeekBossSettleReq extends NetHandler {
         // Get boss level data
         var data = GameData.getWeekBossLevelDataTable().get(player.getInstanceManager().getCurInstanceId());
         if (data == null || !data.hasEnergy(player)) {
-            return this.encodeMsg(NetMsgId.week_boss_settle_failed_ack);
+            return session.encodeMsg(NetMsgId.week_boss_settle_failed_ack);
         }
         
         // Parse request
@@ -51,7 +51,7 @@ public class HandlerWeekBossSettleReq extends NetHandler {
         }
         
         // Send response
-        return this.encodeMsg(NetMsgId.week_boss_settle_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.week_boss_settle_succeed_ack, rsp);
     }
 
 }

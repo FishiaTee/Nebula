@@ -10,7 +10,7 @@ public class HandlerStoryApplyReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.story_apply_succeed_ack);
+        return session.encodeMsg(NetMsgId.story_apply_succeed_ack);
     }
 
 }

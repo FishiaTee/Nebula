@@ -15,7 +15,7 @@ public class HandlerGachaNewbieObtainReq extends NetHandler {
         var req = GachaNewbieObtainReq.parseFrom(message);
         
         // TODO
-        return this.encodeMsg(NetMsgId.gacha_newbie_obtain_failed_ack);
+        return session.encodeMsg(NetMsgId.gacha_newbie_obtain_failed_ack);
     }
 
 }

@@ -18,11 +18,11 @@ public class HandlerItemProductReq extends NetHandler {
         var changes = session.getPlayer().getInventory().produce(req.getId(), req.getNum());
         
         if (changes == null) {
-            return this.encodeMsg(NetMsgId.item_product_failed_ack);
+            return session.encodeMsg(NetMsgId.item_product_failed_ack);
         }
         
         // Send response
-        return this.encodeMsg(NetMsgId.item_product_succeed_ack, changes.toProto());
+        return session.encodeMsg(NetMsgId.item_product_succeed_ack, changes.toProto());
     }
 
 }

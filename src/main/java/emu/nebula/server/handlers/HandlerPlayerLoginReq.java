@@ -25,7 +25,7 @@ public class HandlerPlayerLoginReq extends NetHandler {
         boolean result = session.login(loginToken);
         
         if (!result) {
-            return this.encodeMsg(NetMsgId.player_login_failed_ack);
+            return session.encodeMsg(NetMsgId.player_login_failed_ack);
         }
         
         // Regenerate session token because we are switching encrpytion method
@@ -36,7 +36,7 @@ public class HandlerPlayerLoginReq extends NetHandler {
                 .setToken(session.getToken());
         
         // Encode and send to client
-        return this.encodeMsg(NetMsgId.player_login_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.player_login_succeed_ack, rsp);
     }
 
 }

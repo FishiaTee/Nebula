@@ -23,13 +23,13 @@ public class HandlerStarTowerBuildWhetherSaveReq extends NetHandler {
         );
         
         if (!result) {
-            return this.encodeMsg(NetMsgId.star_tower_build_whether_save_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_build_whether_save_failed_ack);
         }
         
         // Build response
         var rsp = StarTowerBuildWhetherSaveResp.newInstance();
         
-        return this.encodeMsg(NetMsgId.star_tower_build_whether_save_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_build_whether_save_succeed_ack, rsp);
     }
 
 }

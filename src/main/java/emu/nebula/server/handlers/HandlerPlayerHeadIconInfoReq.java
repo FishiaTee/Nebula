@@ -13,7 +13,7 @@ public class HandlerPlayerHeadIconInfoReq extends NetHandler {
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         var rsp = PlayerHeadIconInfoResp.newInstance();
                 
-        return this.encodeMsg(NetMsgId.player_head_icon_info_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.player_head_icon_info_succeed_ack, rsp);
     }
 
 }

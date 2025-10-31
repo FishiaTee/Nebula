@@ -16,21 +16,21 @@ public class HandlerStarTowerBuildNameSetReq extends NetHandler {
         
         // Sanity
         if (req.getName() == null || req.getName().isEmpty()) {
-            return this.encodeMsg(NetMsgId.star_tower_build_name_set_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_build_name_set_failed_ack);
         }
         
         // Get build
         var build = session.getPlayer().getStarTowerManager().getBuildById(req.getBuildId());
         
         if (build == null) {
-            return this.encodeMsg(NetMsgId.star_tower_build_name_set_failed_ack);
+            return session.encodeMsg(NetMsgId.star_tower_build_name_set_failed_ack);
         }
         
         // Set name
         build.setName(req.getName());
         
         // Encode packet
-        return this.encodeMsg(NetMsgId.star_tower_build_name_set_succeed_ack);
+        return session.encodeMsg(NetMsgId.star_tower_build_name_set_succeed_ack);
     }
 
 }

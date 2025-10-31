@@ -10,7 +10,7 @@ public class HandlerAgentApplyReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return this.encodeMsg(NetMsgId.agent_apply_failed_ack);
+        return session.encodeMsg(NetMsgId.agent_apply_failed_ack);
     }
 
 }

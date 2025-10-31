@@ -17,7 +17,7 @@ public class HandlerCharSkillUpgradeReq extends NetHandler {
         var character = session.getPlayer().getCharacters().getCharacterById(req.getCharId());
         
         if (character == null) {
-            return this.encodeMsg(NetMsgId.char_skill_upgrade_failed_ack);
+            return session.encodeMsg(NetMsgId.char_skill_upgrade_failed_ack);
         }
         
         // Advance character
@@ -25,10 +25,10 @@ public class HandlerCharSkillUpgradeReq extends NetHandler {
         var change = character.upgradeSkill(index);
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.char_skill_upgrade_failed_ack);
+            return session.encodeMsg(NetMsgId.char_skill_upgrade_failed_ack);
         }
         
-        return this.encodeMsg(NetMsgId.char_skill_upgrade_succeed_ack, change.toProto());
+        return session.encodeMsg(NetMsgId.char_skill_upgrade_succeed_ack, change.toProto());
     }
 
 }

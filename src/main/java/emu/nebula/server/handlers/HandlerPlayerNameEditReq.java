@@ -15,7 +15,7 @@ public class HandlerPlayerNameEditReq extends NetHandler {
         
         boolean success = session.getPlayer().editName(req.getName());
         
-        return this.encodeMsg(success ? NetMsgId.player_name_edit_succeed_ack : NetMsgId.player_name_edit_failed_ack);
+        return session.encodeMsg(success ? NetMsgId.player_name_edit_succeed_ack : NetMsgId.player_name_edit_failed_ack);
     }
 
 }

@@ -32,7 +32,7 @@ public class HandlerPlayerPingReq extends NetHandler {
             rsp.setNextPackage(nextPackage);
         }
         
-        return this.encodeMsg(NetMsgId.player_ping_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.player_ping_succeed_ack, rsp);
     }
 
 }

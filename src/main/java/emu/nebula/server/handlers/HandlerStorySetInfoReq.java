@@ -37,7 +37,7 @@ public class HandlerStorySetInfoReq extends NetHandler {
             rsp.addChapters(chapter);
         }
         
-        return this.encodeMsg(NetMsgId.story_set_info_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.story_set_info_succeed_ack, rsp);
     }
 
 }

@@ -20,7 +20,7 @@ public class HandlerDiscStrengthenReq extends NetHandler {
         var disc = session.getPlayer().getCharacters().getDiscById(req.getId());
         
         if (disc == null) {
-            return this.encodeMsg(NetMsgId.disc_strengthen_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_strengthen_failed_ack);
         }
         
         // Level up disc
@@ -28,7 +28,7 @@ public class HandlerDiscStrengthenReq extends NetHandler {
         var change = disc.upgrade(params);
         
         if (change == null) {
-            return this.encodeMsg(NetMsgId.disc_strengthen_failed_ack);
+            return session.encodeMsg(NetMsgId.disc_strengthen_failed_ack);
         }
         
         // Create response
@@ -37,7 +37,7 @@ public class HandlerDiscStrengthenReq extends NetHandler {
                 .setExp(disc.getExp())
                 .setChange(change.toProto());
         
-        return this.encodeMsg(NetMsgId.disc_strengthen_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.disc_strengthen_succeed_ack, rsp);
     }
 
 }

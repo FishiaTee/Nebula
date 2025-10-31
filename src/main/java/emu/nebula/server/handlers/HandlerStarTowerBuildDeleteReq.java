@@ -29,7 +29,7 @@ public class HandlerStarTowerBuildDeleteReq extends NetHandler {
                 .setChange(changes.toProto());
                 
         // Encode packet
-        return this.encodeMsg(NetMsgId.star_tower_build_delete_succeed_ack, rsp);
+        return session.encodeMsg(NetMsgId.star_tower_build_delete_succeed_ack, rsp);
     }
 
 }
