@@ -594,6 +594,11 @@ public class Inventory extends PlayerManager implements GameDatabaseObject {
             change = new PlayerChangeInfo();
         }
         
+        // Sanity check
+        if (buyCount <= 0) {
+            return change;
+        }
+        
         // Make sure we have the currency
         int cost = buyCount * currencyCount;
         

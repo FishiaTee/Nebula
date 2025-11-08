@@ -18,6 +18,7 @@ import lombok.Getter;
 
 @SuppressWarnings("unused")
 public class GameData {
+    // Characters
     @Getter private static DataTable<CharacterDef> CharacterDataTable = new DataTable<>();
     @Getter private static DataTable<CharacterAdvanceDef> CharacterAdvanceDataTable = new DataTable<>();
     @Getter private static DataTable<CharacterSkillUpgradeDef> CharacterSkillUpgradeDataTable = new DataTable<>();
@@ -27,12 +28,14 @@ public class GameData {
     @Getter private static DataTable<TalentGroupDef> TalentGroupDataTable = new DataTable<>();
     @Getter private static DataTable<TalentDef> TalentDataTable = new DataTable<>();
     
+    // Discs
     @Getter private static DataTable<DiscDef> DiscDataTable = new DataTable<>();
     @Getter private static DataTable<DiscStrengthenDef> DiscStrengthenDataTable = new DataTable<>();
     @Getter private static DataTable<DiscItemExpDef> DiscItemExpDataTable = new DataTable<>();
     @Getter private static DataTable<DiscPromoteDef> DiscPromoteDataTable = new DataTable<>();
     @Getter private static DataTable<DiscPromoteLimitDef> DiscPromoteLimitDataTable = new DataTable<>();
     
+    // Items
     @Getter private static DataTable<ItemDef> ItemDataTable = new DataTable<>();
     @Getter private static DataTable<ProductionDef> ProductionDataTable = new DataTable<>();
     @Getter private static DataTable<PlayerHeadDef> PlayerHeadDataTable = new DataTable<>();
@@ -43,9 +46,14 @@ public class GameData {
     @Getter private static DataTable<MallShopDef> MallShopDataTable = new DataTable<>();
     @Getter private static DataTable<MallGemDef> MallGemDataTable = new DataTable<>();
     
+    @Getter private static DataTable<ResidentShopDef> ResidentShopDataTable = new DataTable<>();
+    @Getter private static DataTable<ResidentGoodsDef> ResidentGoodsDataTable = new DataTable<>();
+    
+    // Dictionary
     @Getter private static DataTable<DictionaryTabDef> DictionaryTabDataTable = new DataTable<>();
     @Getter private static DataTable<DictionaryEntryDef> DictionaryEntryDataTable = new DataTable<>();
     
+    // Instances
     @Getter private static DataTable<DailyInstanceDef> DailyInstanceDataTable = new DataTable<>();
     @Getter private static DataTable<DailyInstanceRewardGroupDef> DailyInstanceRewardGroupDataTable = new DataTable<>();
     @Getter private static DataTable<RegionBossLevelDef> RegionBossLevelDataTable = new DataTable<>();
@@ -62,9 +70,11 @@ public class GameData {
     @Getter private static DataTable<StoryDef> StoryDataTable = new DataTable<>();
     @Getter private static DataTable<StorySetSectionDef> StorySetSectionDataTable = new DataTable<>();
     
+    // Daily quests
     @Getter private static DataTable<DailyQuestDef> DailyQuestDataTable = new DataTable<>();
     @Getter private static DataTable<DailyQuestActiveDef> DailyQuestActiveDataTable = new DataTable<>();
     
+    // Star tower
     @Getter private static DataTable<StarTowerDef> StarTowerDataTable = new DataTable<>();
     @Getter private static DataTable<StarTowerStageDef> StarTowerStageDataTable = new DataTable<>();
     @Getter private static DataTable<PotentialDef> PotentialDataTable = new DataTable<>();
