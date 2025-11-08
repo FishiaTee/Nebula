@@ -22,6 +22,7 @@ import emu.nebula.game.quest.QuestManager;
 import emu.nebula.game.scoreboss.ScoreBossManager;
 import emu.nebula.game.story.StoryManager;
 import emu.nebula.game.tower.StarTowerManager;
+import emu.nebula.game.vampire.VampireSurvivorManager;
 import emu.nebula.net.GameSession;
 import emu.nebula.net.NetMsgId;
 import emu.nebula.net.NetMsgPacket;
@@ -70,6 +71,7 @@ public class Player implements GameDatabaseObject {
     // Managers
     private final transient CharacterStorage characters;
     private final transient GachaManager gachaManager;
+    private final transient VampireSurvivorManager vampireSurvivorManager;
     private final transient ScoreBossManager scoreBossManager;
     
     // Referenced data
@@ -89,6 +91,7 @@ public class Player implements GameDatabaseObject {
         // Init player managers
         this.characters = new CharacterStorage(this);
         this.gachaManager = new GachaManager(this);
+        this.vampireSurvivorManager = new VampireSurvivorManager(this);
         this.scoreBossManager = new ScoreBossManager(this);
         
         // Init next packages stack
