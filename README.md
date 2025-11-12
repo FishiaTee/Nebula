@@ -10,7 +10,7 @@ A game server emulator for a certain anime game.
 # Running the server and client
 
 ### Prerequisites
-* [Java 25](https://www.oracle.com/java/technologies/javase/jdk25-archive-downloads.html)
+* [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 
 ### Recommended
 * [MongoDB 4.0+](https://www.mongodb.com/try/download/community)
