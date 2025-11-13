@@ -153,7 +153,7 @@ public class Character implements GameDatabaseObject {
         // Check if we leveled up
         if (this.level > oldLevel) {
             // Trigger quest
-            this.getPlayer().getQuestManager().triggerQuest(QuestCondType.CharacterUpTotal, this.level - oldLevel);
+            this.getPlayer().triggerQuest(QuestCondType.CharacterUpTotal, this.level - oldLevel);
         }
         
         // Save to database

@@ -1,7 +1,6 @@
 package emu.nebula.game.quest;
 
 import dev.morphia.annotations.Entity;
-import emu.nebula.data.resources.DailyQuestDef;
 import emu.nebula.proto.Public.Quest;
 import emu.nebula.proto.Public.QuestProgress;
 import lombok.Getter;
@@ -13,6 +12,7 @@ public class GameQuest {
     private int id;
     private int type;
     private int cond;
+    private int param;
     
     private int curProgress;
     private int maxProgress;
@@ -25,11 +25,15 @@ public class GameQuest {
         
     }
     
-    public GameQuest(DailyQuestDef data) {
+    public GameQuest(QuestData data) {
         this.id = data.getId();
-        this.type = QuestType.Daily;
+        this.type = data.getQuestType();
         this.cond = data.getCompleteCond();
         this.maxProgress = data.getCompleteCondParams()[0];
+        
+        if (data.getCompleteCondParams().length >= 2) {
+            this.param = data.getCompleteCondParams()[1];
+        }
     }
 
     public void resetProgress() {
@@ -51,7 +55,7 @@ public class GameQuest {
         return 0;
     }
 
-    public boolean trigger(QuestCondType condition, int param) {
+    public boolean trigger(QuestCondType condition, int progress, int param) {
         // Sanity check
         if (this.isComplete()) {
             return false;
@@ -62,8 +66,13 @@ public class GameQuest {
             return false;
         }
         
+        // Check quest param
+        if (this.param != 0 && param != this.param) {
+            return false;
+        }
+        
         // Get new progress
-        int newProgress = Math.min(this.curProgress + param, this.maxProgress);
+        int newProgress = Math.min(this.curProgress + progress, this.maxProgress);
         
         // Set
         if (this.curProgress != newProgress) {

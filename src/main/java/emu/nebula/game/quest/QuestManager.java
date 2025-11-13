@@ -6,6 +6,7 @@ import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+
 import emu.nebula.Nebula;
 import emu.nebula.data.GameData;
 import emu.nebula.data.resources.WorldClassDef;
@@ -15,10 +16,13 @@ import emu.nebula.game.player.Player;
 import emu.nebula.game.player.PlayerChangeInfo;
 import emu.nebula.game.player.PlayerManager;
 import emu.nebula.net.NetMsgId;
+import emu.nebula.proto.PlayerData.PlayerInfo;
 import emu.nebula.util.Bitset;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -90,10 +94,10 @@ public class QuestManager extends PlayerManager implements GameDatabaseObject {
         this.save();
     }
 
-    public synchronized void triggerQuest(QuestCondType condition, int param) {
+    public synchronized void trigger(QuestCondType condition, int progress, int param) {
         for (var quest : getQuests().values()) {
             // Try to trigger quest
-            boolean result = quest.trigger(condition, param);
+            boolean result = quest.trigger(condition, progress, param);
             
             // Skip if quest progress wasn't changed
             if (!result) {
@@ -106,6 +110,21 @@ public class QuestManager extends PlayerManager implements GameDatabaseObject {
             // Update in database
             Nebula.getGameDatabase().update(this, this.getUid(), "quests." + quest.getId(), quest);
         }
+    }
+    
+    
+    /**
+     * Update this quest on the player client
+     */
+    private void syncQuest(GameQuest quest) {
+        if (!getPlayer().hasSession()) {
+            return;
+        }
+        
+        getPlayer().addNextPackage(
+            NetMsgId.quest_change_notify, 
+            quest.toProto()
+        );
     }
     
     public PlayerChangeInfo receiveQuestReward(int questId) {
@@ -159,6 +178,9 @@ public class QuestManager extends PlayerManager implements GameDatabaseObject {
         
         // Update in database
         Nebula.getGameDatabase().update(this, this.getUid(), "activity", this.getActivity());
+        
+        // Trigger quest
+        this.getPlayer().triggerQuest(QuestCondType.QuestWithSpecificType, claimList.size(), QuestType.Daily);
         
         // Success
         return change.setSuccess(true);
@@ -250,20 +272,6 @@ public class QuestManager extends PlayerManager implements GameDatabaseObject {
         return change.setSuccess(true);
     }
     
-    /**
-     * Update this quest on the player client
-     */
-    private void syncQuest(GameQuest quest) {
-        if (!getPlayer().hasSession()) {
-            return;
-        }
-        
-        getPlayer().addNextPackage(
-                NetMsgId.quest_change_notify, 
-                quest.toProto()
-        );
-    }
-    
     // Daily reward
     
     public PlayerChangeInfo claimDailyReward() {
@@ -281,9 +289,29 @@ public class QuestManager extends PlayerManager implements GameDatabaseObject {
         Nebula.getGameDatabase().update(this, this.getUid(), "hasDailyReward", this.hasDailyReward);
         
         // Trigger quest
-        this.triggerQuest(QuestCondType.DailyShopReceiveShopTotal, 1);
+        this.getPlayer().triggerQuest(QuestCondType.DailyShopReceiveShopTotal, 1);
         
         // Success
         return change.setSuccess(true);
+    }
+    
+    // Serialization
+    
+    public void encodeProto(PlayerInfo proto) {
+        var quests = proto.getMutableQuests();
+        
+        for (var quest : this.getQuests().values()) {
+            quests.addList(quest.toProto());
+        }
+        
+        for (int id : this.getClaimedActiveIds()) {
+            proto.addDailyActiveIds(id);
+        }
+        
+        proto.getMutableState()
+            .getMutableWorldClassReward()
+            .setFlag(this.getLevelRewards().toBigEndianByteArray());
+        
+        proto.setTourGuideQuestGroup(1);
     }
 }

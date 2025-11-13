@@ -13,7 +13,7 @@ public class HandlerClientEventReportReq extends NetHandler {
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
         // Interact
-        session.getPlayer().getQuestManager().triggerQuest(QuestCondType.ClientReport, 1);
+        session.getPlayer().triggerQuest(QuestCondType.ClientReport, 1);
         
         // Encode response
         return session.encodeMsg(NetMsgId.client_event_report_succeed_ack, Nil.newInstance());

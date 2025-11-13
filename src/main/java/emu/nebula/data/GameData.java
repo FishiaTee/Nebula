@@ -53,6 +53,12 @@ public class GameData {
     @Getter private static DataTable<ResidentShopDef> ResidentShopDataTable = new DataTable<>();
     @Getter private static DataTable<ResidentGoodsDef> ResidentGoodsDataTable = new DataTable<>();
     
+    // Battle Pass
+    @Getter private static DataTable<BattlePassDef> BattlePassDataTable = new DataTable<>();
+    @Getter private static DataTable<BattlePassLevelDef> BattlePassLevelDataTable = new DataTable<>();
+    @Getter private static DataTable<BattlePassQuestDef> BattlePassQuestDataTable = new DataTable<>();
+    @Getter private static DataTable<BattlePassRewardDef> BattlePassRewardDataTable = new DataTable<>();
+    
     // Commissions
     @Getter private static DataTable<AgentDef> AgentDataTable = new DataTable<>();
     

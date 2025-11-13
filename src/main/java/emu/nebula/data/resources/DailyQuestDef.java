@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import emu.nebula.data.BaseDef;
 import emu.nebula.data.ResourceType;
+import emu.nebula.game.quest.QuestData;
+import emu.nebula.game.quest.QuestType;
 import lombok.Getter;
 
 @Getter
 @ResourceType(name = "DailyQuest.json")
-public class DailyQuestDef extends BaseDef {
+public class DailyQuestDef extends BaseDef implements QuestData {
     private int Id;
     private boolean Apear;
     private int Active;
@@ -24,6 +26,11 @@ public class DailyQuestDef extends BaseDef {
     @Override
     public int getId() {
         return Id;
+    }
+    
+    @Override
+    public int getQuestType() {
+        return QuestType.Daily;
     }
     
     public int[] getCompleteCondParams() {

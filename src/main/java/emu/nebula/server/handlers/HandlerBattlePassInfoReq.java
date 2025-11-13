@@ -10,7 +10,11 @@ public class HandlerBattlePassInfoReq extends NetHandler {
 
     @Override
     public byte[] handle(GameSession session, byte[] message) throws Exception {
-        return session.encodeMsg(NetMsgId.battle_pass_info_failed_ack);
+        // Get battle pass proto
+        var info = session.getPlayer().getBattlePassManager().getBattlePass().toProto();
+        
+        // Encode and send
+        return session.encodeMsg(NetMsgId.battle_pass_info_succeed_ack, info);
     }
 
 }

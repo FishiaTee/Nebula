@@ -60,7 +60,7 @@ public class StarTowerManager extends PlayerManager {
         this.game = new StarTowerGame(this, data, formation, req);
         
         // Trigger quest
-        this.getPlayer().getQuestManager().triggerQuest(QuestCondType.TowerEnterFloor, 1);
+        this.getPlayer().triggerQuest(QuestCondType.TowerEnterFloor, 1);
         
         // Success
         return this.game;

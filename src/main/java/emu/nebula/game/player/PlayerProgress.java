@@ -108,7 +108,7 @@ public class PlayerProgress extends PlayerManager implements GameDatabaseObject 
     
     // Proto
     
-    public void toProto(PlayerInfo proto) {
+    public void encodeProto(PlayerInfo proto) {
         // Check if we want to unlock all instances
         boolean unlockAll = Nebula.getConfig().getServerOptions().unlockInstances;
         

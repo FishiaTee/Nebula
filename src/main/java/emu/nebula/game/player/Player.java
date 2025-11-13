@@ -12,6 +12,7 @@ import emu.nebula.data.GameData;
 import emu.nebula.database.GameDatabaseObject;
 import emu.nebula.game.account.Account;
 import emu.nebula.game.agent.AgentManager;
+import emu.nebula.game.battlepass.BattlePassManager;
 import emu.nebula.game.character.CharacterStorage;
 import emu.nebula.game.formation.FormationManager;
 import emu.nebula.game.gacha.GachaManager;
@@ -77,6 +78,7 @@ public class Player implements GameDatabaseObject {
     // Managers
     private final transient CharacterStorage characters;
     private final transient GachaManager gachaManager;
+    private final transient BattlePassManager battlePassManager;
     private final transient StarTowerManager starTowerManager;
     private final transient InstanceManager instanceManager;
     private final transient InfinityTowerManager infinityTowerManager;
@@ -100,6 +102,7 @@ public class Player implements GameDatabaseObject {
         // Init player managers
         this.characters = new CharacterStorage(this);
         this.gachaManager = new GachaManager(this);
+        this.battlePassManager = new BattlePassManager(this);
         this.starTowerManager = new StarTowerManager(this);
         this.instanceManager = new InstanceManager(this);
         this.infinityTowerManager = new InfinityTowerManager(this);
@@ -475,7 +478,7 @@ public class Player implements GameDatabaseObject {
         change = modifyEnergy(-amount, change);
         
         // Trigger quest
-        this.getQuestManager().triggerQuest(QuestCondType.EnergyDeplete, amount);
+        this.triggerQuest(QuestCondType.EnergyDeplete, amount);
         
         // Complete
         return change;
@@ -535,6 +538,18 @@ public class Player implements GameDatabaseObject {
     public void resetDailies() {
         // Reset daily quests
         this.getQuestManager().resetDailyQuests();
+        this.getBattlePassManager().getBattlePass().resetDailyQuests();
+    }
+    
+    // Trigger quests
+    
+    public void triggerQuest(QuestCondType condition, int progress) {
+        this.triggerQuest(condition, progress, 0);
+    }
+    
+    public void triggerQuest(QuestCondType condition, int progress, int param) {
+        this.getQuestManager().trigger(condition, progress, param);
+        this.getBattlePassManager().getBattlePass().trigger(condition, progress, param);
     }
     
     // Login
@@ -562,6 +577,7 @@ public class Player implements GameDatabaseObject {
         // Load from database
         this.getCharacters().loadFromDatabase();
         this.getStarTowerManager().loadFromDatabase();
+        this.getBattlePassManager().loadFromDatabase();
         
         // Load inventory before referenced classes
         if (this.inventory == null) {
@@ -589,7 +605,7 @@ public class Player implements GameDatabaseObject {
         this.checkResetDailies();
         
         // Trigger quest login
-        this.getQuestManager().triggerQuest(QuestCondType.LoginTotal, 1);
+        this.triggerQuest(QuestCondType.LoginTotal, 1);
     }
     
     // Next packages
@@ -684,7 +700,9 @@ public class Player implements GameDatabaseObject {
         state.getMutableMail()
             .setNew(this.getMailbox().hasNewMail());
         
-        state.getMutableBattlePass();
+        state.getMutableBattlePass()
+            .setState(1);
+        
         state.getMutableFriendEnergy();
         state.getMutableMallPackage();
         state.getMutableAchievement();
@@ -732,17 +750,7 @@ public class Player implements GameDatabaseObject {
         }
         
         // Quests
-        var quests = proto.getMutableQuests();
-        for (var quest : this.getQuestManager().getQuests().values()) {
-            quests.addList(quest.toProto());
-        }
-        
-        for (int id : this.getQuestManager().getClaimedActiveIds()) {
-            proto.addDailyActiveIds(id);
-        }
-        
-        state.getMutableWorldClassReward()
-            .setFlag(this.getQuestManager().getLevelRewards().toBigEndianByteArray());
+        this.getQuestManager().encodeProto(proto);
         
         // Add dictionary tabs
         for (var dictionaryData : GameData.getDictionaryTabDataTable()) {
@@ -761,7 +769,7 @@ public class Player implements GameDatabaseObject {
         }
         
         // Add progress
-        this.getProgress().toProto(proto);
+        this.getProgress().encodeProto(proto);
         
         // Handbook
         proto.addHandbook(this.getCharacters().getCharacterHandbook());
