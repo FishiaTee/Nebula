@@ -125,7 +125,7 @@ public class GameSession {
         
         // Skip intro
         if (player == null && Nebula.getConfig().getServerOptions().skipIntro) {
-            player = Nebula.getGameContext().getPlayerModule().createPlayer(this, "Test", false);
+            player = Nebula.getGameContext().getPlayerModule().createPlayer(this, "Player", false);
         }
         
         // Set player
