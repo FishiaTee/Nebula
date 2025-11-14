@@ -12,7 +12,6 @@ import emu.nebula.Nebula;
 import emu.nebula.database.GameDatabaseObject;
 import emu.nebula.game.player.Player;
 import emu.nebula.proto.Public.FormationInfo;
-import emu.nebula.proto.Public.TowerFormation;
 import lombok.Getter;
 
 @Getter
@@ -69,14 +68,6 @@ public class FormationManager extends PlayerManager implements GameDatabaseObjec
         
         // Success
         return true;
-    }
-    
-    // Proto
-    
-    public TowerFormation toProto() {
-        var proto = TowerFormation.newInstance();
-        
-        return proto;
     }
 
 }

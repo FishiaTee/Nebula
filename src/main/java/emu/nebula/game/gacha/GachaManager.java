@@ -29,8 +29,8 @@ public class GachaManager extends PlayerManager {
         }
         
         return this.bannerInfos.computeIfAbsent(
-                gachaData.getId(), 
-                i -> new GachaBannerInfo(this.getPlayer(), gachaData)
+            gachaData.getId(), 
+            i -> new GachaBannerInfo(this.getPlayer(), gachaData)
         );
     }
     

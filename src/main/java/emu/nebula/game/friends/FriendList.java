@@ -139,7 +139,7 @@ public class FriendList extends PlayerManager {
             theirFriendship.save();
         } else {
             // Request declined - Delete from my pending friends
-            this.removePendingFriendship(myFriendship.getOwnerUid());
+            this.removePendingFriendship(myFriendship.getPlayerUid());
 
             if (target.isLoaded()) {
                 target.getFriendList().removePendingFriendship(getPlayer().getUid());
@@ -251,7 +251,7 @@ public class FriendList extends PlayerManager {
         
         friendships.forEach(friendship -> {
             // Set ownership first
-            friendship.setOwner(getPlayer());
+            friendship.setPlayer(this.getPlayer());
             
             // Finally, load to our friends list
             if (friendship.isFriend()) {

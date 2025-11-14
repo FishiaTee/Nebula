@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Friendship implements GameDatabaseObject {
     @Id private long key;
     
-    @Indexed private int ownerUid;
+    @Indexed private int playerUid;
     @Indexed private int friendUid;
     private int askerUid;
     
@@ -24,17 +24,17 @@ public class Friendship implements GameDatabaseObject {
     private boolean star;
     private int energy;
     
-    @Setter private transient Player owner;
+    @Setter private transient Player player;
     
     @Deprecated // Morphia use only
     public Friendship() { }
     
-    public Friendship(Player owner, Player friend, Player asker) {
-        this.owner = owner;
-        this.ownerUid = owner.getUid();
+    public Friendship(Player player, Player friend, Player asker) {
+        this.player = player;
+        this.playerUid = player.getUid();
         this.friendUid = friend.getUid();
         this.askerUid = asker.getUid();
-        this.key = Friendship.generateUniqueKey(owner.getUid(), friend.getUid());
+        this.key = Friendship.generateUniqueKey(player.getUid(), friend.getUid());
     }
     
     // Database functions

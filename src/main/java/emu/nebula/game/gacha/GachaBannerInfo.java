@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Indexed;
 import emu.nebula.data.resources.GachaDef;
 import emu.nebula.data.resources.GachaDef.GachaPackage;
 import emu.nebula.data.resources.GachaPkgDef;
@@ -18,8 +19,9 @@ public class GachaBannerInfo implements GameDatabaseObject {
     @Id
     private ObjectId id;
     
-    private int bannerId;
+    @Indexed
     private int playerUid;
+    private int bannerId;
     
     private int total;
     private int missTimesA;

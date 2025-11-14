@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 import emu.nebula.Nebula;
+import emu.nebula.game.player.Player;
 
 /**
  * Helper class for handling account related stuff
@@ -40,14 +41,23 @@ public class AccountHelper {
         return Nebula.getAccountDatabase().getObjectByField(Account.class, "loginToken", token);
     }
     
-    public static boolean deleteAccount(String username) {
-        Account account = Nebula.getAccountDatabase().getObjectByField(Account.class, "username", username);
+    public static boolean deleteAccount(String email) {
+        // Get account
+        Account account = Nebula.getAccountDatabase().getObjectByField(Account.class, "email", email);
 
         if (account == null) {
             return false;
         }
         
-        // Delete the account first
+        // Delete player
+        if (Nebula.getGameContext() != null) {
+            var player = Nebula.getGameDatabase().getObjectByField(Player.class, "accountUid", account.getUid());
+            if (player != null) {
+                Nebula.getGameContext().getPlayerModule().deletePlayer(player.getUid());
+            }
+        }
+        
+        // Delete the account
         return Nebula.getAccountDatabase().delete(account);
     }
     

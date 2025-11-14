@@ -4,12 +4,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mongodb.client.model.Filters;
+
 import emu.nebula.Nebula;
 import emu.nebula.game.GameContext;
 import emu.nebula.game.GameContextModule;
 import emu.nebula.game.account.Account;
+import emu.nebula.game.agent.AgentManager;
+import emu.nebula.game.battlepass.BattlePass;
+import emu.nebula.game.character.Character;
+import emu.nebula.game.character.GameDisc;
+import emu.nebula.game.formation.FormationManager;
+import emu.nebula.game.friends.Friendship;
+import emu.nebula.game.gacha.GachaBannerInfo;
+import emu.nebula.game.inventory.GameItem;
+import emu.nebula.game.inventory.GameResource;
+import emu.nebula.game.inventory.Inventory;
+import emu.nebula.game.mail.Mailbox;
+import emu.nebula.game.quest.QuestManager;
+import emu.nebula.game.story.StoryManager;
+import emu.nebula.game.tower.StarTowerBuild;
 import emu.nebula.net.GameSession;
-
+import emu.nebula.proto.ScoreBossRank;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -123,6 +139,60 @@ public class PlayerModule extends GameContextModule {
         session.setPlayer(player);
 
         return player;
+    }
+    
+    /**
+     * Deletes a player from the database. The player must be offline.
+     * @param uid
+     * @return
+     */
+    public synchronized boolean deletePlayer(int uid) {
+        // Make sure player is not online when we are deleting the player
+        Player player = this.getCachedPlayerByUid(uid);
+        if (player != null) {
+            return false;
+        }
+        
+        // Get player from database
+        player = Nebula.getGameDatabase().getObjectByUid(Player.class, uid);
+        if (player == null) {
+            return false;
+        }
+        
+        // Cache filter objects so we can reuse it for our delete queries
+        var multiFilter = Filters.eq("playerUid", uid);
+        var idFilter = Filters.eq("_id", uid);
+        
+        // Get datastore
+        var datastore = Nebula.getGameDatabase().getDatastore();
+        
+        // Delete data from collections
+        datastore.getCollection(Character.class).deleteMany(multiFilter);
+        datastore.getCollection(GameDisc.class).deleteMany(multiFilter);
+        datastore.getCollection(GameItem.class).deleteMany(multiFilter);
+        datastore.getCollection(GameResource.class).deleteMany(multiFilter);
+        datastore.getCollection(StarTowerBuild.class).deleteMany(multiFilter);
+        datastore.getCollection(GachaBannerInfo.class).deleteMany(multiFilter);
+
+        datastore.getCollection(Inventory.class).deleteOne(idFilter);
+        datastore.getCollection(FormationManager.class).deleteOne(idFilter);
+        datastore.getCollection(Mailbox.class).deleteOne(idFilter);
+        datastore.getCollection(PlayerProgress.class).deleteOne(idFilter);
+        datastore.getCollection(StoryManager.class).deleteOne(idFilter);
+        datastore.getCollection(QuestManager.class).deleteOne(idFilter);
+        datastore.getCollection(AgentManager.class).deleteOne(idFilter);
+        
+        datastore.getCollection(BattlePass.class).deleteOne(idFilter);
+        datastore.getCollection(ScoreBossRank.class).deleteOne(idFilter);
+        
+        // Delete friendships
+        datastore.getCollection(Friendship.class).deleteMany(Filters.or(Filters.eq("playerUid", uid), Filters.eq("friendUid", uid)));
+        
+        // Finally delete the player
+        datastore.getCollection(Player.class).deleteOne(idFilter);
+        
+        // Success
+        return true;
     }
     
     /**

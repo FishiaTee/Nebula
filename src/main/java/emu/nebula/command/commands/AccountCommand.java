@@ -6,7 +6,7 @@ import emu.nebula.command.CommandHandler;
 import emu.nebula.game.account.AccountHelper;
 import emu.nebula.util.Utils;
 
-@Command(label = "account", permission = "admin.account", desc = "/account {create | delete} [username] (reserved player uid). Creates or deletes an account.")
+@Command(label = "account", permission = "admin.account", desc = "/account {create | delete} [email] (reserved player uid). Creates or deletes an account.")
 public class AccountCommand implements CommandHandler {
 
     @Override
