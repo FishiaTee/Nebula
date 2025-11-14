@@ -19,10 +19,9 @@ public class Friendship implements GameDatabaseObject {
     @Indexed private int friendUid;
     private int askerUid;
     
-    @Setter
-    private boolean isFriend;
-    private boolean star;
-    private int energy;
+    @Setter private boolean isFriend;
+    @Setter private boolean star;
+    @Setter private int energy;
     
     @Setter private transient Player player;
     

@@ -15,6 +15,7 @@ import emu.nebula.proto.Public.FriendState;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
+import us.hebi.quickbuf.RepeatedLong;
 
 @Getter
 public class FriendList extends PlayerManager {
@@ -243,6 +244,24 @@ public class FriendList extends PlayerManager {
         // Success
         return true;
     }
+
+    public synchronized void setStar(RepeatedLong list, boolean star) {
+        for (long id : list) {
+            // Get friendship
+            var friendship = this.getFriendById((int) id);
+            
+            if (friendship == null) {
+                continue;
+            }
+            
+            // Set star
+            friendship.setStar(star);
+            friendship.save();
+        }
+        
+        // Reset cooldown on caching friendlist proto
+        this.cacheCooldown = 0;
+    }
     
     // Database
     
@@ -285,6 +304,7 @@ public class FriendList extends PlayerManager {
             // Create info
             var info = FriendDetail.newInstance()
                     .setBase(base)
+                    .setStar(friend.isStar())
                     .setGetEnergy(friend.getEnergy());
             
             // Add
