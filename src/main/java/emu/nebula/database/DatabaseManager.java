@@ -218,7 +218,7 @@ public final class DatabaseManager {
             .update(opt, UpdateOperators.set(field, item));
     }
     
-    public void addToList(Object obj, int uid, String field, Object item) {
+    public void addToSet(Object obj, int uid, String field, Object item) {
         var opt = new UpdateOptions().upsert(false);
         
         getDatastore().find(obj.getClass())

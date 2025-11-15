@@ -86,7 +86,7 @@ public class PlayerProgress extends PlayerManager implements GameDatabaseObject 
         
         // Add & Save to database
         this.getStarTowerLog().add(id);
-        Nebula.getGameDatabase().addToList(this, this.getUid(), "starTowerLog", id);
+        Nebula.getGameDatabase().addToSet(this, this.getUid(), "starTowerLog", id);
     }
     
     public void addInfinityArenaLog(int levelId) {

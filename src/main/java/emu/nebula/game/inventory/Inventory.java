@@ -146,7 +146,7 @@ public class Inventory extends PlayerManager implements GameDatabaseObject {
         this.getExtraSkins().add(id);
         
         // Save to database
-        Nebula.getGameDatabase().addToList(this, this.getUid(), "extraSkins", id);
+        Nebula.getGameDatabase().addToSet(this, this.getUid(), "extraSkins", id);
         
         // Send packet
         this.getPlayer().addNextPackage(
@@ -212,7 +212,7 @@ public class Inventory extends PlayerManager implements GameDatabaseObject {
         this.getHeadIcons().add(id);
         
         // Save to database
-        Nebula.getGameDatabase().addToList(this, this.getUid(), "headIcons", id);
+        Nebula.getGameDatabase().addToSet(this, this.getUid(), "headIcons", id);
         
         // Success
         return true;
@@ -228,7 +228,7 @@ public class Inventory extends PlayerManager implements GameDatabaseObject {
         this.getTitles().add(id);
         
         // Save to database
-        Nebula.getGameDatabase().addToList(this, this.getUid(), "titles", id);
+        Nebula.getGameDatabase().addToSet(this, this.getUid(), "titles", id);
         
         // Success
         return true;
@@ -244,7 +244,7 @@ public class Inventory extends PlayerManager implements GameDatabaseObject {
         this.getHonorList().add(id);
         
         // Save to database
-        Nebula.getGameDatabase().addToList(this, this.getUid(), "honorList", id);
+        Nebula.getGameDatabase().addToSet(this, this.getUid(), "honorList", id);
         
         // Success
         return true;

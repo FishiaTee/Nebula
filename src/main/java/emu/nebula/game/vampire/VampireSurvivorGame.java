@@ -48,7 +48,11 @@ public class VampireSurvivorGame {
     public int getId() {
         return this.getData().getId();
     }
-    
+
+    public boolean isNewCard(int id) {
+        return !this.getManager().getProgress().getVampireCards().contains(id);
+    }
+
     private void cacheRandomCards() {
         this.randomCards = new ObjectOpenHashSet<>();
         
@@ -87,6 +91,11 @@ public class VampireSurvivorGame {
         
         // Get random selector
         var random = this.getRandom();
+        
+        // Sanity check
+        if (random.size() == 0) {
+            return;
+        }
         
         // Add 2 rewards
         this.getRewards().add(random.next().intValue());
@@ -148,12 +157,12 @@ public class VampireSurvivorGame {
         
         for (int id : this.getRewards()) {
             var card = CardInfo.newInstance()
-                    .setId(id);
+                    .setId(id)
+                    .setNew(this.isNewCard(id));
             
             pkg.addCards(card);
         }
         
         return proto;
     }
-
 }

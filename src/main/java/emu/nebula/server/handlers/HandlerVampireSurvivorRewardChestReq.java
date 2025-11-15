@@ -31,7 +31,7 @@ public class HandlerVampireSurvivorRewardChestReq extends NetHandler {
         for (int cardId : chest) {
             var card = CardInfo.newInstance()
                     .setId(cardId)
-                    .setNew(true);
+                    .setNew(game.isNewCard(cardId));
             
             rsp.addChestCards(card);
         }

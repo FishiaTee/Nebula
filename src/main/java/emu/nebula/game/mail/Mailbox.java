@@ -76,7 +76,7 @@ public class Mailbox extends PlayerManager implements GameDatabaseObject, Iterab
         
         // Save to database
         Nebula.getGameDatabase().update(this, getUid(), "lastMailId", this.getLastMailId());
-        Nebula.getGameDatabase().addToList(this, getUid(), "list", mail);
+        Nebula.getGameDatabase().addToSet(this, getUid(), "list", mail);
     }
     
     public boolean readMail(int id, long flag) {

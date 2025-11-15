@@ -1,10 +1,15 @@
 package emu.nebula.game.vampire;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import emu.nebula.Nebula;
 import emu.nebula.data.GameData;
 import emu.nebula.game.player.Player;
 import emu.nebula.game.player.PlayerManager;
 import emu.nebula.game.player.PlayerProgress;
+import emu.nebula.net.NetMsgId;
+import emu.nebula.proto.VampireTalentDetail.VampireTalentDetailResp;
 import emu.nebula.util.Bitset;
 import lombok.Getter;
 import us.hebi.quickbuf.RepeatedLong;
@@ -68,6 +73,9 @@ public class VampireSurvivorManager extends PlayerManager {
             return;
         }
         
+        // Save earned cards to the database
+        this.updateSavedCards();
+        
         // Skip if we didn't win
         if (!isWin) {
             return;
@@ -99,4 +107,33 @@ public class VampireSurvivorManager extends PlayerManager {
         this.game = null;
     }
 
+    private void updateSavedCards() {
+        // Get new cards
+        List<Integer> newCards = new ArrayList<>();
+        
+        for (int card : game.getCards()) {
+            if (this.getProgress().getVampireCards().contains(card)) {
+                continue;
+            }
+            
+            this.getProgress().getVampireCards().add(card);
+            newCards.add(card);
+        }
+        
+        if (newCards.size() == 0) {
+            return;
+        }
+        
+        // Save to database
+        Nebula.getGameDatabase().addToSet(this.getProgress(), this.getPlayerUid(), "vampireCards", newCards);
+        
+        // Notify player
+        this.getPlayer().addNextPackage(
+            NetMsgId.vampire_survivor_talent_node_notify,
+            VampireTalentDetailResp.newInstance()
+                .setNodes(this.getTalents().toByteArray())
+                .setActiveCount(this.getProgress().getVampireCards().size())
+                .setObtainCount(newCards.size())
+        );
+    }
 }

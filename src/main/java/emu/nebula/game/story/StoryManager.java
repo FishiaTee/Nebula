@@ -60,7 +60,7 @@ public class StoryManager extends PlayerManager implements GameDatabaseObject {
             this.getPlayer().getInventory().addItems(data.getRewards(), changes);
             
             // Save to db
-            Nebula.getGameDatabase().addToList(this, this.getPlayerUid(), "completedStories", id);
+            Nebula.getGameDatabase().addToSet(this, this.getPlayerUid(), "completedStories", id);
         }
         
         return changes;
