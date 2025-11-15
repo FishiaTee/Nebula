@@ -1,10 +1,14 @@
 package emu.nebula.game.player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import emu.nebula.Nebula;
 import emu.nebula.data.GameData;
 import emu.nebula.database.GameDatabaseObject;
+import emu.nebula.game.vampire.VampireSurvivorLog;
 import emu.nebula.proto.PlayerData.PlayerInfo;
 import emu.nebula.proto.Public.CharGemInstance;
 import emu.nebula.proto.Public.DailyInstance;
@@ -12,6 +16,7 @@ import emu.nebula.proto.Public.RegionBossLevel;
 import emu.nebula.proto.Public.SkillInstance;
 import emu.nebula.proto.Public.VampireSurvivorLevel;
 import emu.nebula.proto.Public.WeekBossLevel;
+import emu.nebula.util.Bitset;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -38,6 +43,9 @@ public class PlayerProgress extends PlayerManager implements GameDatabaseObject 
     private Int2IntMap infinityArenaLog;
     
     // Vampire Survivors TODO
+    private Map<Integer, VampireSurvivorLog> vampireLog;
+    private Bitset vampireTalents;
+    private IntSet vampireCards;
 
     @Deprecated // Morphia only
     public PlayerProgress() {
@@ -62,6 +70,9 @@ public class PlayerProgress extends PlayerManager implements GameDatabaseObject 
         this.infinityArenaLog = new Int2IntOpenHashMap();
         
         // Vampire Survivor
+        this.vampireLog = new HashMap<>();
+        this.vampireTalents = new Bitset();
+        this.vampireCards = new IntOpenHashSet();
         
         // Save to database
         this.save();
@@ -180,18 +191,31 @@ public class PlayerProgress extends PlayerManager implements GameDatabaseObject 
             proto.addWeekBossLevels(p);
         }
         
-        // Force unlock all vampire survivor records
+        // Vampire survivors
         var vsProto = proto.getMutableVampireSurvivorRecord();
-        
         vsProto.getMutableSeason();
         
-        for (var vsData : GameData.getVampireSurvivorDataTable()) {
-            var level = VampireSurvivorLevel.newInstance()
-                    .setId(vsData.getId())
-                    .setScore(0)
-                    .setPassed(true);
-            
-            vsProto.addRecords(level);
+        if (unlockAll) {
+            // Force unlock all vampire survivor records if we dont have the records
+            for (var vsData : GameData.getVampireSurvivorDataTable()) {
+                // Get existing record
+                var log = this.getVampireLog().get(vsData.getId());
+                
+                if (log == null) {
+                    var level = VampireSurvivorLevel.newInstance()
+                            .setId(vsData.getId())
+                            .setScore(0)
+                            .setPassed(true);
+                    
+                    vsProto.addRecords(level);
+                } else {
+                    vsProto.addRecords(log.toProto());
+                }
+            }
+        } else {
+            for (var log : this.getVampireLog().values()) {
+                vsProto.addRecords(log.toProto());
+            }
         }
     }
 }

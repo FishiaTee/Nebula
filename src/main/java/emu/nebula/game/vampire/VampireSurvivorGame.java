@@ -15,6 +15,7 @@ import lombok.Getter;
 public class VampireSurvivorGame {
     private final VampireSurvivorManager manager;
     private final VampireSurvivorDef data;
+    private long[] builds;
     
     private IntSet cards;
     
@@ -22,14 +23,19 @@ public class VampireSurvivorGame {
     private int rewardLevel;
     private IntList rewards;
     
-    public VampireSurvivorGame(VampireSurvivorManager manager, VampireSurvivorDef data) {
+    public VampireSurvivorGame(VampireSurvivorManager manager, VampireSurvivorDef data, long[] builds) {
         this.manager = manager;
         this.data = data;
+        this.builds = builds;
         
         this.cards = new IntOpenHashSet();
         this.rewards = new IntArrayList();
         
         this.calcRewards();
+    }
+    
+    public int getId() {
+        return this.getData().getId();
     }
     
     private WeightedList<Integer> getRandom() {

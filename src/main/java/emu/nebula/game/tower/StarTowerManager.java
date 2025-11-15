@@ -37,6 +37,10 @@ public class StarTowerManager extends PlayerManager {
     public StarTowerBuild getBuildById(long id) {
         return this.getBuilds().get(id);
     }
+
+    public boolean hasBuild(long id) {
+        return this.getBuilds().containsKey(id);
+    }
     
     public StarTowerGame apply(StarTowerApplyReq req) {
         // Sanity checks

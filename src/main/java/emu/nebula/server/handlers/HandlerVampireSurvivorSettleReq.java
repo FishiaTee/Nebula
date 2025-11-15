@@ -25,7 +25,7 @@ public class HandlerVampireSurvivorSettleReq extends NetHandler {
         
         // Calculate victory + score
         boolean victory = !req.getDefeat();
-        int score = 0;
+        int score = 1;
         
         // Settle
         session.getPlayer().getVampireSurvivorManager().settle(victory, score);

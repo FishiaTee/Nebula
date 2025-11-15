@@ -16,7 +16,7 @@ public class HandlerVampireSurvivorApplyReq extends NetHandler {
         var req = VampireSurvivorApplyReq.parseFrom(message);
         
         // Apply
-        var game = session.getPlayer().getVampireSurvivorManager().apply(req.getId());
+        var game = session.getPlayer().getVampireSurvivorManager().apply(req.getId(), req.getBuildIds());
         
         if (game == null) {
             return session.encodeMsg(NetMsgId.vampire_survivor_apply_failed_ack);
