@@ -20,7 +20,7 @@ public class InfinityTowerManager extends PlayerManager {
     }
     
     public int getBountyLevel() {
-        return 1;
+        return 0;
     }
     
     public boolean apply(int levelId, long buildId) {
