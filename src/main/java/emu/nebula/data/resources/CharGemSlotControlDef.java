@@ -3,8 +3,8 @@ package emu.nebula.data.resources;
 import emu.nebula.data.BaseDef;
 import emu.nebula.data.GameData;
 import emu.nebula.data.ResourceType;
+import emu.nebula.util.CustomIntArray;
 import emu.nebula.util.WeightedList;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
 
@@ -35,9 +35,10 @@ public class CharGemSlotControlDef extends BaseDef {
     }
     
     public IntList generateAttributes() {
-        // Generate list of attributes
-        var list = new IntArrayList();
-        
+        return this.generateAttributes(new CustomIntArray());
+    }
+    
+    public IntList generateAttributes(CustomIntArray list) {
         // Add unique attributes
         if (this.UniqueAttrGroupId > 0) {
             var group = GameData.getCharGemAttrGroupDataTable().get(this.UniqueAttrGroupId);
@@ -48,7 +49,7 @@ public class CharGemSlotControlDef extends BaseDef {
                 list.add(attributeType.getRandomValue());
             }
             
-            if (list.size() >= 4) {
+            if (list.size() >= this.MaxAlterNum) {
                 return list;
             }
         }
@@ -66,7 +67,7 @@ public class CharGemSlotControlDef extends BaseDef {
         }
         
         // Add up to 4 attributes
-        while (list.size() < 4) {
+        while (list.getValueCount() < this.MaxAlterNum) {
             var group = random.next();
             var attributeType = group.getRandomAttributeType(list);
             list.add(attributeType.getRandomValue());

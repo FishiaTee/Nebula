@@ -32,7 +32,9 @@ import emu.nebula.proto.Public.UI32;
 import emu.nebula.proto.PublicStarTower.StarTowerChar;
 import emu.nebula.proto.PublicStarTower.StarTowerCharGem;
 import emu.nebula.util.Bitset;
+import emu.nebula.util.CustomIntArray;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Getter;
 import us.hebi.quickbuf.RepeatedInt;
 
@@ -558,6 +560,7 @@ public class Character implements GameDatabaseObject {
         return change;
     }
     
+    @SuppressWarnings("deprecation")
     public synchronized PlayerChangeInfo refreshGem(int slotId, int gemIndex, RepeatedInt lockedAttributes) {
         // Get gem from slot
         var gem = this.getGemFromSlot(slotId, gemIndex);
@@ -572,20 +575,47 @@ public class Character implements GameDatabaseObject {
             return null;
         }
         
-        // Make sure the player has the materials to craft the emblem
-        if (!getPlayer().getInventory().hasItem(gemData.getRefreshCostTid(), gemControl.getRefreshCostQty())) {
+        // Get locked attributes
+        if (lockedAttributes.length() > gemControl.getLockableNum()) {
             return null;
         }
         
+        // Calculate the materials we need
+        var materials = new ItemParamMap();
+        materials.add(gemData.getRefreshCostTid(), gemControl.getRefreshCostQty());
+        materials.add(gemControl.getLockItemTid(), gemControl.getLockItemQty() * lockedAttributes.length());
+        
+        // Make sure the player has the materials to craft the emblem
+        if (!getPlayer().getInventory().hasItems(materials)) {
+            return null;
+        }
+        
+        // Create base list of attributes
+        var list = new CustomIntArray();
+        
+        // Add locked attributes to list
+        if (lockedAttributes.length() != 0) {
+            var locked = new IntOpenHashSet();
+            lockedAttributes.forEach(locked::add);
+            
+            for (int i = 0; i < gem.getAttributes().length; i++) {
+                int attr = gem.getAttributes()[i];
+                
+                if (locked.contains(attr)) {
+                    list.add(i, attr);
+                }
+            }
+        }
+        
         // Generate attributes and create gem
-        var attributes = gemControl.generateAttributes();
+        var attributes = gemControl.generateAttributes(list);
         gem.setNewAttributes(attributes);
         
         // Save to database
         this.save();
         
         // Consume materials
-        var change = getPlayer().getInventory().removeItem(gemData.getRefreshCostTid(), gemControl.getRefreshCostQty());
+        var change = getPlayer().getInventory().removeItems(materials);
         
         // Set change info extra info
         change.setExtraData(gem);
