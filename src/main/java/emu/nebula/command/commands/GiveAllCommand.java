@@ -19,7 +19,7 @@ import emu.nebula.net.NetMsgId;
         aliases = {"ga"}, 
         permission = "player.give", 
         requireTarget = true, 
-        desc = "!ga [characters | discs | materials]. Gives the targeted player items."
+        desc = "!ga [characters | discs | materials] lv(level) t(talent/crescendo level) s(skill level). Gives the targeted player items."
 )
 public class GiveAllCommand implements CommandHandler {
     private static Set<ItemSubType> MATERIAL_ITEM_SUBTYPES = Set.of(
@@ -35,12 +35,15 @@ public class GiveAllCommand implements CommandHandler {
         Player target = args.getTarget();
         String type = args.get(0).toLowerCase();
         
-        var items = new ItemParamMap();
+        
         var change = new PlayerChangeInfo();
 
         switch (type) {
             default -> args.sendMessage("Error: Invalid type");
             case "m", "materials", "mats" -> {
+                // Create items map
+                var items = new ItemParamMap();
+                
                 // Check sub type
                 for (ItemDef data : GameData.getItemDataTable()) {
                     if (!MATERIAL_ITEM_SUBTYPES.contains(data.getItemSubType())) {
@@ -78,12 +81,15 @@ public class GiveAllCommand implements CommandHandler {
                         continue;
                     }
                     
-                    // Add
-                    items.add(data.getId(), 1);
+                    // Add to player
+                    var disc = target.getCharacters().addDisc(data.getId());
+                    
+                    // Set properties
+                    args.setProperties(disc);
+                    
+                    // Add to change info
+                    change.add(disc.toProto());
                 }
-                
-                // Add to target's inventory
-                target.getInventory().addItems(items, change);
 
                 // Send message
                 args.sendMessage("Giving " + target.getName() + " all discs");
@@ -101,12 +107,15 @@ public class GiveAllCommand implements CommandHandler {
                         continue;
                     }
                     
-                    // Add
-                    items.add(data.getId(), 1);
+                    // Add to player
+                    var character = target.getCharacters().addCharacter(data.getId());
+                    
+                    // Set properties
+                    args.setProperties(character);
+                    
+                    // Add to change info
+                    change.add(character.toProto());
                 }
-                
-                // Add to target's inventory
-                target.getInventory().addItems(items, change);
 
                 // Send message
                 args.sendMessage("Giving " + target.getName() + " all characters");

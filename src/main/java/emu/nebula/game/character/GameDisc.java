@@ -70,6 +70,18 @@ public class GameDisc implements GameDatabaseObject {
         }
     }
     
+    public void setLevel(int level) {
+        this.level = level;
+    }
+    
+    public void setPhase(int phase) {
+        this.phase = phase;
+    }
+    
+    public void setStar(int star) {
+        this.star = star;
+    }
+    
     public SubNoteSkillPromoteGroupDef getSubNoteSkillDef() {
         int id = (this.getData().getSubNoteSkillGroupId() * 100) + this.getPhase();
         return GameData.getSubNoteSkillPromoteGroupDataTable().get(id);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import emu.nebula.Nebula;
 import emu.nebula.game.character.GameCharacter;
+import emu.nebula.game.character.GameDisc;
 import emu.nebula.game.player.Player;
 import emu.nebula.util.Utils;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
@@ -54,7 +55,7 @@ public class CommandArgs {
                     } else if (arg.startsWith("a")) { // Advance
                         this.advance = Utils.parseSafeInt(arg.substring(1));
                         it.remove();
-                    } else if (arg.startsWith("t")) { // Talents
+                    } else if (arg.startsWith("t") || arg.startsWith("c")) { // Talents/Crescendo
                         this.talent = Utils.parseSafeInt(arg.substring(1));
                         it.remove();
                     } else if (arg.startsWith("s")) { // Skill
@@ -136,15 +137,19 @@ public class CommandArgs {
         boolean hasChanged = false;
 
         // Try to set level
-        if (this.getLevel() > 0 && character.getLevel() != this.getLevel()) {
-            character.setLevel(Math.min(this.getLevel(), 90));
+        int level = Math.min(this.getLevel(), 90);
+        
+        if (level > 0 && character.getLevel() != level) {
+            character.setLevel(level);
             character.setAdvance(Utils.getMinAdvanceForLevel(character.getLevel()));
             hasChanged = true;
         }
         
         // Try to set advance (ascension level)
-        if (this.getAdvance() >= 0 && character.getAdvance() != this.getAdvance()) {
-            character.setAdvance(Math.min(this.getAdvance(), 8));
+        int advance = Math.min(this.getAdvance(), 8);
+        
+        if (advance >= 0 && character.getAdvance() != advance) {
+            character.setAdvance(advance);
             hasChanged = true;
         }
         
@@ -183,6 +188,42 @@ public class CommandArgs {
                 character.getTalents().setBit(offset + 16);
             }
             
+            hasChanged = true;
+        }
+        
+        return hasChanged;
+    }
+    
+    /**
+     * Changes the properties of an disc based on the arguments provided
+     * @param disc The targeted disc to change
+     * @return A boolean of whether or not any changes were made to the disc
+     */
+    public boolean setProperties(GameDisc disc) {
+        boolean hasChanged = false;
+
+        // Try to set level
+        int level = Math.min(this.getLevel(), 90);
+        
+        if (level > 0 && disc.getLevel() != level) {
+            disc.setLevel(level);
+            disc.setPhase(Utils.getMinAdvanceForLevel(disc.getLevel()));
+            hasChanged = true;
+        }
+        
+        // Try to set advance (ascension level)
+        int promotion = Math.min(this.getAdvance(), 8);
+        
+        if (promotion >= 0 && disc.getPhase() != promotion) {
+            disc.setPhase(promotion);
+            hasChanged = true;
+        }
+        
+        // Calculate how many talent stars we want to set
+        int star = Math.min(this.getTalent(), 5);
+        
+        if (star >= 0 && disc.getStar() != star) {
+            disc.setStar(star);
             hasChanged = true;
         }
         
