@@ -32,6 +32,9 @@ public class HandlerPlayerRegReq extends NetHandler {
             return session.encodeMsg(NetMsgId.player_reg_failed_ack);
         }
         
+        // Set player for session
+        session.setPlayer(player);
+        
         // Encode player data
         return session.encodeMsg(NetMsgId.player_data_succeed_ack, session.getPlayer().toProto());
     }
