@@ -166,6 +166,12 @@ public class StarTowerGame {
             this.subNoteDropList.add(id);
         }
         
+        // Starting gold
+        int money = this.getStartingGold();
+        if (money > 0) {
+            this.getRes().add(GameConstants.STAR_TOWER_GOLD_ITEM_ID, money);
+        }
+        
         // Add cases
         this.addCase(new StarTowerCase(CaseType.Battle));
         this.addCase(new StarTowerCase(CaseType.SyncHP));
@@ -211,6 +217,20 @@ public class StarTowerGame {
         }
         
         return getStageData(stage, floor);
+    }
+    
+    public int getStartingGold() {
+        int gold = 0;
+        
+        if (this.getManager().hasGrowthNode(10103)) {
+            gold += 50;
+        } if (this.getManager().hasGrowthNode(10403)) {
+            gold += 100;
+        } if (this.getManager().hasGrowthNode(10702)) {
+            gold += 200;
+        }
+        
+        return gold;
     }
     
     // Cases
@@ -700,6 +720,14 @@ public class StarTowerGame {
                     .setLevel(entry.getIntValue());
             
             bag.addPotentials(item);
+        }
+        
+        for (var entry : this.getRes()) {
+            var res = TowerResInfo.newInstance()
+                    .setTid(entry.getIntKey())
+                    .setQty(entry.getIntValue());
+            
+            bag.addRes(res);
         }
         
         return proto;
