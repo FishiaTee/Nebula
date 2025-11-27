@@ -175,15 +175,6 @@ public class StarTowerGame {
         // Add cases
         this.addCase(new StarTowerCase(CaseType.Battle));
         this.addCase(new StarTowerCase(CaseType.SyncHP));
-        
-        // Always keep the door open
-        var doorCase = this.addCase(new StarTowerCase(CaseType.OpenDoor));
-        doorCase.setFloorId(this.getStageFloor() + 1);
-        
-        var nextStage = this.getNextStageData();
-        if (nextStage != null) {
-            doorCase.setRoomType(nextStage.getRoomType());
-        }
     }
     
     public Player getPlayer() {
@@ -465,12 +456,7 @@ public class StarTowerGame {
                 .setBattleTime(this.getBattleTime());
             
             // Add money
-            // TODO calculate properly
-            int money = Utils.randomRange(5, 15) * 10;
-            
-            if (this.getRoomType() == StarTowerRoomType.BossRoom.getValue()) {
-                money += 100;
-            }
+            int money = this.getStageData(this.getStageNum(), this.getStageFloor()).getInteriorCurrencyQuantity();
             
             this.addItem(GameConstants.STAR_TOWER_GOLD_ITEM_ID, money, change);
             
@@ -492,6 +478,7 @@ public class StarTowerGame {
                 int subNoteSkills = battleCase.getSubNoteSkillNum();
                 this.addRandomSubNoteSkills(subNoteSkills, change);
             }
+
         } else {
             // Handle defeat
             // TODO
@@ -530,8 +517,20 @@ public class StarTowerGame {
             // Create potential selector
             var potentialCase = this.createPotentialSelector(this.getRandomCharId());
             this.addCase(rsp.getMutableCases(), potentialCase);
-            
+
             this.pendingPotentialCases--;
+        }
+        else {
+            // Add door case
+            var doorCase = this.addCase(new StarTowerCase(CaseType.OpenDoor));
+            doorCase.setFloorId(this.getStageFloor() + 1);
+        
+            var nextStage = this.getNextStageData();
+            if (nextStage != null) {
+                doorCase.setRoomType(nextStage.getRoomType());
+            }
+
+            this.addCase(rsp.getMutableCases(), doorCase);
         }
         
         return rsp;
@@ -579,14 +578,6 @@ public class StarTowerGame {
         
         // Add cases
         var syncHpCase = new StarTowerCase(CaseType.SyncHP);
-        var doorCase = new StarTowerCase(CaseType.OpenDoor);
-        doorCase.setFloorId(this.getFloor() + 1);
-        
-        // Set room type of next room
-        var nextStage = this.getNextStageData();
-        if (nextStage != null) {
-            doorCase.setRoomType(nextStage.getRoomType());
-        }
         
         // Room proto
         var room = rsp.getMutableEnterResp().getMutableRoom();
@@ -613,7 +604,21 @@ public class StarTowerGame {
         
         // Add cases
         this.addCase(room.getMutableCases(), syncHpCase);
-        this.addCase(room.getMutableCases(), doorCase);
+
+        // Add door to next floor if current floor is choice/shop domains
+        if (this.roomType == 6 | this.roomType == 7) {
+            var doorCase = new StarTowerCase(CaseType.OpenDoor);
+            doorCase.setFloorId(this.getFloor() + 1);
+
+            // Set room type of next room
+            var nextStage = this.getNextStageData();
+            if (nextStage != null) {
+                doorCase.setRoomType(nextStage.getRoomType());
+            }
+
+            // Add case
+            this.addCase(room.getMutableCases(), doorCase);
+        }
         
         // Done
         return rsp;

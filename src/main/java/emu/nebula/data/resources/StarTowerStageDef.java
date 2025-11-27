@@ -11,6 +11,7 @@ public class StarTowerStageDef extends BaseDef {
     private int Stage;
     private int Floor;
     private int RoomType;
+    private int InteriorCurrencyQuantity;
     
     @Override
     public int getId() {
