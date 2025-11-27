@@ -13,7 +13,7 @@ import emu.nebula.game.player.PlayerModule;
 import emu.nebula.game.scoreboss.ScoreBossModule;
 import emu.nebula.game.tutorial.TutorialModule;
 import emu.nebula.net.GameSession;
-
+import emu.nebula.util.Utils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -34,6 +34,7 @@ public class GameContext implements Runnable {
     
     // Daily
     private long epochDays;
+    private int epochWeeks;
     
     public GameContext() {
         this.sessions = new Object2ObjectOpenHashMap<>();
@@ -103,6 +104,7 @@ public class GameContext implements Runnable {
         
         long lastEpochDays = this.epochDays;
         this.epochDays = date.toEpochDay();
+        this.epochWeeks = Utils.getWeeks(this.epochDays);
         
         // Check if the day was changed
         if (this.epochDays > lastEpochDays) {

@@ -44,6 +44,7 @@ import emu.nebula.proto.Public.QuestType;
 import emu.nebula.proto.Public.Story;
 import emu.nebula.proto.Public.WorldClass;
 import emu.nebula.proto.Public.WorldClassRewardState;
+import emu.nebula.util.Utils;
 import emu.nebula.proto.Public.Title;
 
 import lombok.Getter;
@@ -592,8 +593,13 @@ public class Player implements GameDatabaseObject {
             return;
         }
         
+        // Check if week has changed (Resets on monday)
+        // TODO add a config option
+        int curWeek = Utils.getWeeks(this.getLastEpochDay());
+        boolean hasWeekChanged = Nebula.getGameContext().getEpochWeeks() > curWeek;
+        
         // Reset dailies
-        this.resetDailies(false);
+        this.resetDailies(hasWeekChanged);
         
         // Update last epoch day
         this.lastEpochDay = Nebula.getGameContext().getEpochDays();

@@ -262,4 +262,13 @@ public class Utils {
             return false;
         }
     }
+    
+    /**
+     * Get amount weeks since this epoch day. Each week starts on monday.
+     * @param epochDays
+     * @return
+     */
+    public static int getWeeks(long epochDays) {
+        return (int) Math.floor((epochDays + 3) / 7D);
+    }
 }
