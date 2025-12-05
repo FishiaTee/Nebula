@@ -34,7 +34,6 @@ public class GameConstants {
     public static final int GEM_ITEM_ID = 2;
     public static final int PREM_GEM_ITEM_ID = 3;
     public static final int ENERGY_BUY_ITEM_ID = GEM_ITEM_ID;
-    public static final int STAR_TOWER_COIN_ITEM_ID = 11;
     public static final int EXP_ITEM_ID = 21;
     
     public static final int MAX_ENERGY = 240;
@@ -51,6 +50,11 @@ public class GameConstants {
     
     public static final int MAX_FRIENDSHIPS = 50;
     public static final int MAX_PENDING_FRIENDSHIPS = 30;
+    
+    public static final int TOWER_COIN_ITEM_ID = 11;
+    public static final int[] TOWER_COMMON_SUB_NOTE_SKILLS = new int[] {
+        90011, 90012, 90013, 90014, 90015, 90016, 90017
+    };
     
     public static int[][] VAMPIRE_SURVIVOR_BONUS_POWER = new int[][] {
         new int[] {100, 120},

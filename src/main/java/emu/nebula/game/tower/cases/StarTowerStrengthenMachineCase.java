@@ -50,7 +50,7 @@ public class StarTowerStrengthenMachineCase extends StarTowerBaseCase {
         StarTowerBaseCase towerCase = null;
         
         // Check coin
-        int coin = getGame().getResCount(GameConstants.STAR_TOWER_COIN_ITEM_ID);
+        int coin = getGame().getResCount(GameConstants.TOWER_COIN_ITEM_ID);
         int price = this.getPrice();
         
         if (coin >= price) {
@@ -62,7 +62,7 @@ public class StarTowerStrengthenMachineCase extends StarTowerBaseCase {
             this.getRoom().addCase(rsp.getMutableCases(), towerCase);
             
             // Remove coins
-            var change = this.getGame().addItem(GameConstants.STAR_TOWER_COIN_ITEM_ID, -price);
+            var change = this.getGame().addItem(GameConstants.TOWER_COIN_ITEM_ID, -price);
             
             // Set change info
             rsp.setChange(change.toProto());

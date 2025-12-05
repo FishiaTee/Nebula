@@ -20,8 +20,8 @@ import emu.nebula.proto.PublicStarTower.StarTowerBuildDetail;
 import emu.nebula.proto.PublicStarTower.StarTowerBuildInfo;
 import emu.nebula.proto.PublicStarTower.TowerBuildChar;
 import emu.nebula.util.Snowflake;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+
+import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 
 @Getter
@@ -44,7 +44,7 @@ public class StarTowerBuild implements GameDatabaseObject {
     private ItemParamMap potentials;
     private ItemParamMap subNoteSkills;
     
-    private IntList secondarySkills;
+    private IntSet secondarySkills;
     
     @Deprecated
     public StarTowerBuild() {
@@ -58,24 +58,15 @@ public class StarTowerBuild implements GameDatabaseObject {
         this.charPots = new ItemParamMap();
         this.potentials = new ItemParamMap();
         this.subNoteSkills = new ItemParamMap();
-        this.secondarySkills = new IntArrayList();
     }
     
     public StarTowerBuild(StarTowerGame game) {
         // Initialize basic variables
         this(game.getPlayer());
         
-        // Characters
-        this.charIds = game.getChars().stream()
-                .filter(c -> c.getId() > 0)
-                .mapToInt(c -> c.getId())
-                .toArray();
-        
-        // Discs
-        this.discIds = game.getDiscs().stream()
-                .filter(d -> d.getId() > 0)
-                .mapToInt(d -> d.getId())
-                .toArray();
+        // Set char/disc ids
+        this.charIds = game.getCharIds();
+        this.discIds = game.getDiscIds();
         
         // Add potentials
         for (var entry : game.getPotentials()) {
@@ -98,6 +89,9 @@ public class StarTowerBuild implements GameDatabaseObject {
         for (var entry : game.getItems()) {
             this.getSubNoteSkills().put(entry.getIntKey(), entry.getIntValue());
         }
+        
+        // Set secondary skills
+        this.secondarySkills = game.getSecondarySkills();
         
         // Caclulate record score and cache it
         this.calculateScore();
@@ -134,63 +128,6 @@ public class StarTowerBuild implements GameDatabaseObject {
         Nebula.getGameDatabase().update(this, this.getUid(), "preference", this.isPreference());
     }
     
-    // Secondary skills
-    
-    private void calculateSecondarySkills() {
-        // Reset active secondary skills
-        if (this.secondarySkills == null) {
-            this.secondarySkills = new IntArrayList();
-        } else {
-            this.secondarySkills.clear();
-        }
-        
-        // Get first 3 discs
-        for (int i = 0; i < 3; i++) {
-            // Disc id
-            int discId = this.getDiscIds()[i];
-            
-            // Get disc data
-            var data = GameData.getDiscDataTable().get(discId);
-            if (data == null) continue;
-            
-            // Add secondary skills
-            int s1= this.getSecondarySkill(data.getSecondarySkillGroupId1());
-            if (s1 > 0) {
-                this.getSecondarySkills().add(s1);
-            }
-            
-            int s2 = this.getSecondarySkill(data.getSecondarySkillGroupId2());
-            if (s2 > 0) {
-                this.getSecondarySkills().add(s2);
-            }
-        }
-    }
-    
-    private int getSecondarySkill(int groupId) {
-        // Check group id
-        if (groupId <= 0) {
-            return 0;
-        }
-        
-        // Get group
-        var group = SecondarySkillDef.getGroup(groupId);
-        if (group == null) {
-            return 0;
-        }
-        
-        // Reverse iterator to try and match highest secondary skill first
-        for (int i = group.size() - 1; i >= 0; i--) {
-            var data = group.get(i);
-            
-            if (data.match(this.getSubNoteSkills())) {
-                return data.getId();
-            }
-        }
-        
-        // Failure
-        return 0;
-    }
-    
     // Score
     
     public int calculateScore() {
@@ -210,8 +147,10 @@ public class StarTowerBuild implements GameDatabaseObject {
             this.score += item.getIntValue() * 15;
         }
         
-        // Calculate secondary skills
-        this.calculateSecondarySkills();
+        // Check secondary skills
+        if (this.getSecondarySkills() == null) {
+            this.secondarySkills = SecondarySkillDef.calculateSecondarySkills(this.getDiscIds(), this.getSubNoteSkills());
+        }
         
         // Add score from secondary skills
         for (int id : this.getSecondarySkills()) {

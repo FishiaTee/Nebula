@@ -141,7 +141,7 @@ public class StarTowerHawkerCase extends StarTowerBaseCase {
         }
         
         // Make sure we have enough currency
-        int coin = this.getGame().getResCount(GameConstants.STAR_TOWER_COIN_ITEM_ID);
+        int coin = this.getGame().getResCount(GameConstants.TOWER_COIN_ITEM_ID);
         int price = this.getModifiers().getShopRerollPrice();
         
         if (coin < price) {
@@ -159,7 +159,7 @@ public class StarTowerHawkerCase extends StarTowerBaseCase {
             .setHawkerCase(this.toHawkerCaseProto());
         
         // Remove coins
-        var change = this.getGame().addItem(GameConstants.STAR_TOWER_COIN_ITEM_ID, -price);
+        var change = this.getGame().addItem(GameConstants.TOWER_COIN_ITEM_ID, -price);
         
         // Set change info
         rsp.setChange(change.toProto());
@@ -173,7 +173,7 @@ public class StarTowerHawkerCase extends StarTowerBaseCase {
         }
         
         // Make sure we have enough currency
-        int coin = this.getGame().getResCount(GameConstants.STAR_TOWER_COIN_ITEM_ID);
+        int coin = this.getGame().getResCount(GameConstants.TOWER_COIN_ITEM_ID);
         int price = goods.getPrice();
         
         if (coin < price || goods.isSold()) {
@@ -197,7 +197,7 @@ public class StarTowerHawkerCase extends StarTowerBaseCase {
         }
         
         // Remove coins
-        this.getGame().addItem(GameConstants.STAR_TOWER_COIN_ITEM_ID, -price, change);
+        this.getGame().addItem(GameConstants.TOWER_COIN_ITEM_ID, -price, change);
         
         // Set change info
         rsp.setChange(change.toProto());

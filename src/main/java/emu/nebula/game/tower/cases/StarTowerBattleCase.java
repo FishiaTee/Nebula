@@ -82,7 +82,7 @@ public class StarTowerBattleCase extends StarTowerBaseCase {
             // Add coin
             int coin = this.getRoom().getStage().getInteriorCurrencyQuantity();
             
-            this.getGame().addItem(GameConstants.STAR_TOWER_COIN_ITEM_ID, coin, change);
+            this.getGame().addItem(GameConstants.TOWER_COIN_ITEM_ID, coin, change);
             
             // Handle pending potential selectors
             var nextCases = this.getGame().handlePendingPotentialSelectors();

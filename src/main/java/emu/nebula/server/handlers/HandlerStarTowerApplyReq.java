@@ -30,7 +30,7 @@ public class HandlerStarTowerApplyReq extends NetHandler {
         // Create response
         var rsp = StarTowerApplyResp.newInstance()
                 .setLastId(req.getId())
-                .setCoinQty(game.getResCount(GameConstants.STAR_TOWER_COIN_ITEM_ID))
+                .setCoinQty(game.getResCount(GameConstants.TOWER_COIN_ITEM_ID))
                 .setInfo(game.toProto())
                 .setChange(change.toProto());
         

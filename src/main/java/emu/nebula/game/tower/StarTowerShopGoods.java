@@ -55,6 +55,6 @@ public class StarTowerShopGoods {
         }
         
         int index = this.getCharPos() - 1;
-        return game.getCharIds().getInt(index);
+        return game.getCharIds()[index];
     }
 }
