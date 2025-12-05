@@ -65,7 +65,7 @@ public class TowerDefenseActivity extends GameActivity {
         var proto = msg.getMutableTowerDefense();
 
         // Add completed stages
-        for (int id : this.completedStages.values()) {
+        for (int id : this.completedStages.keySet()) {
             // Create proto
             var level = ActivityTowerDefenseLevel.newInstance();
 
@@ -78,7 +78,7 @@ public class TowerDefenseActivity extends GameActivity {
         }
 
         // Add completed quests
-        for (int id : this.completedStages.values()) {
+        for (int id : this.completedStages.keySet()) {
             // Create proto
             var quest = ActivityQuest.newInstance();
 
